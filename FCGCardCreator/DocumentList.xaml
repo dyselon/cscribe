@@ -1,0 +1,16 @@
+﻿<Window x:Class="FCGCardCreator.DocumentList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DocumentList" Height="349.254" Width="516.418">
+    <Grid Margin="0,0,2,-20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="159*"/>
+            <ColumnDefinition Width="131*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="Documents" HorizontalAlignment="Left" Height="227" Margin="10,10,0,0" VerticalAlignment="Top" Width="486" Grid.ColumnSpan="2"/>
+        <Button Content="Import" HorizontalAlignment="Left" Margin="10,273,0,0" VerticalAlignment="Top" Width="257" Height="42" Click="Button_Click_2"/>
+        <Button Content="Cancel&#xD;&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="10,273,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="Button_Click_1"/>
+        <Label x:Name="StatusLabel" Content="Label" HorizontalAlignment="Left" Margin="10,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.706,-2.31" Width="486" Grid.ColumnSpan="2"/>
+
+    </Grid>
+</Window>

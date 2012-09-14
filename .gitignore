@@ -33,3 +33,6 @@ Ankh.NoLoad
 
 #Project files
 [Bb]uild/
+
+#Nuget
+packages/
