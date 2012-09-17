@@ -18,36 +18,43 @@
             <Button x:Name="PrintSelected" Content="Print Selected..." Click="PrintSelected_Click"></Button>
             
         </StackPanel>
-        <TabControl Grid.Row="1">
-            <TabItem Header="Heroes">
-                <DockPanel>
-                    <ListBox x:Name="HeroBox" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="Pink" BorderThickness="1" HorizontalAlignment="Stretch">
-                            <Grid HorizontalAlignment="Stretch">
-                                <Label Content="{Binding Path=FullName}"/>
-                                <Label Content="{Binding Path=CountString}" HorizontalAlignment="Right"/>
-                            </Grid>
+        <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Path=CategoryName}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <DockPanel DataContext="{Binding Path=Cards}">
+                        <ListBox x:Name="CardList" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Pink" BorderThickness="1" HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Label Content="{Binding Path=Name}"/>
+                                            <Label Content="{Binding Path=Count}" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Margin="10,2">Template:</Label>
+                            <TextBox x:Name="FileName" Grid.Column="1" Text="{Binding XamlTemplateFilename}" TextChanged="FileName_TextChanged"/>
+                            <Button x:Name="BrowseButton" Grid.Column="2" Margin="10,0" Padding="10,0" Click="BrowseTemplate">Browse...</Button>
+                        </Grid>
+                        <Border x:Name="CardContainer" Height="Auto" Width="Auto" BorderBrush="#FFE7E8EC" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            DataContext="{Binding ElementName=CardList, Path=SelectedItem}">
                         </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-                    <Grid DockPanel.Dock="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Label Margin="10,2">Template:</Label>
-                        <TextBox x:Name="HeroFileName" Grid.Column="1" TextChanged="HeroFileName_TextChanged"/>
-                        <Button x:Name="BrowseButton" Grid.Column="2" Margin="10,0" Padding="10,0" Click="BrowseHeroTemplate">Browse...</Button>
-                    </Grid>
-                    <Border x:Name="HeroContainer" Height="Auto" Width="Auto" BorderBrush="#FFE7E8EC" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Center"
-                            DataContext="{Binding ElementName=HeroBox, Path=SelectedItem}">
-                    </Border>
-                </DockPanel>
-            </TabItem>
+                    </DockPanel>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
     </Grid>
 </Window>

@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Dynamic;
 
 namespace FCGCardCreator
 {
@@ -23,13 +24,26 @@ namespace FCGCardCreator
     /// </summary>
     public partial class MainWindow : Window
     {
+        private struct CardCategory {
+            public string CategoryName { get; set; }
+            public ObservableCollection<dynamic> Cards { get; set; }
+            public string XamlTemplateFilename { get; set; }
+            public ObservableCollection<dynamic> SelectedCards { get; set; }
+        }
+        private ObservableCollection<CardCategory> tabdata = new ObservableCollection<CardCategory>();
+
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = heroes;
+            DataContext = tabdata;
 
-            heroes.Add(new DataTypes.HeroData { Name = "Joe Starkiller", Subtitle = "Killer of Stars", Count = 3 });
-            heroes.Add(new DataTypes.HeroData { Name = "Frank of Tarth", Subtitle = "Sapphire Guy", Count = 11 });
+            AddTab("Heroes");
+            dynamic card1 = new ExpandoObject();
+            card1.Name = "Jack Hammer"; card1.Subtitle = "Woo!"; card1.Count = "5";
+            AddCardToTab(card1, "Heroes");
+            dynamic card2 = new ExpandoObject();
+            card2.Name = "Joe Schmo"; card2.Subtitle = "Rawr!"; card2.Count = "6";
+            AddCardToTab(card2, "Heroes");
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -38,20 +52,23 @@ namespace FCGCardCreator
             window.ShowDialog();
         }
 
-        private ObservableCollection<DataTypes.HeroData> heroes = new ObservableCollection<DataTypes.HeroData>();
-
-        public void AddHero(DataTypes.HeroData hero)
+        public void AddTab(string tabname)
         {
-            heroes.Add(hero);
+            tabdata.Add(new CardCategory { CategoryName = tabname, Cards = new ObservableCollection<dynamic>() });
+        }
+
+        public void AddCardToTab(dynamic card, string tabname)
+        {
+            var tab = tabdata.Single<CardCategory>(category => category.CategoryName == tabname);
+            tab.Cards.Add(card);
         }
 
         private void HeroBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var thing = "Rawr!";
             var that = this;
         }
 
-        private void BrowseHeroTemplate(object sender, RoutedEventArgs e)
+        private void BrowseTemplate(object sender, RoutedEventArgs e)
         {
             var opendialog = new Microsoft.Win32.OpenFileDialog();
             opendialog.DefaultExt = ".xaml";
@@ -61,11 +78,14 @@ namespace FCGCardCreator
 
             if (result == true)
             {
-                HeroFileName.Text = opendialog.FileName;
+                Button thisbutton = (Button)sender;
+                var parent = thisbutton.TemplatedParent as ContentPresenter;
+                var filename = parent.ContentTemplate.FindName("FileName", parent) as TextBox;
+                filename.Text = opendialog.FileName;
             }
         }
 
-        private void HeroFileName_TextChanged(object sender, TextChangedEventArgs e)
+        private void FileName_TextChanged(object sender, TextChangedEventArgs e)
         {
             /*
             var filename = HeroFileName.Text;
@@ -77,29 +97,34 @@ namespace FCGCardCreator
             var stream = new StreamReader(filename);
             var cardui = XamlReader.Load(stream.BaseStream) as FrameworkElement;
              */
+            TextBox thisbox = (TextBox)sender;
 
-            var cardui = LoadXaml();
-
+            var cardui = LoadXaml(thisbox.Text);
             if (cardui == null) { return; }
 
-            HeroContainer.Child = (UIElement)cardui;
-
+            var parent = thisbox.TemplatedParent as ContentPresenter;
+            var cardcontainer = parent.ContentTemplate.FindName("CardContainer", parent) as Border;
+            cardcontainer.Child = cardui;
             cardui.UpdateLayout();
         }
 
         private void ExportSelected_Click(object sender, RoutedEventArgs e)
         {
-            List<DataTypes.HeroData> herolist = new List<DataTypes.HeroData>();
-            foreach (var hero in HeroBox.SelectedItems)
+            Button thisbutton = (Button)sender;
+            var parent = thisbutton.TemplatedParent as ContentPresenter;
+            var cardlist = parent.ContentTemplate.FindName("CardList", parent) as ListBox;
+            var filenamebox = parent.FindName("FileName") as TextBox;
+
+            var selectedcards = new List<dynamic>();
+            foreach (var card in cardlist.SelectedItems)
             {
-                herolist.Add((DataTypes.HeroData)hero);
+                selectedcards.Add(card);
             }
-            Export(herolist);
+            Export(selectedcards, filenamebox.Text);
         }
 
-        private FrameworkElement LoadXaml()
+        private FrameworkElement LoadXaml(string filename)
         {
-            var filename = HeroFileName.Text;
             if (!File.Exists(filename))
             {
                 return null;
@@ -108,9 +133,9 @@ namespace FCGCardCreator
             return XamlReader.Load(stream.BaseStream) as FrameworkElement;
         }
 
-        private void Export(IList<DataTypes.HeroData> heroes)
+        private void Export(IList<dynamic> cards, string templatefilename)
         {
-            var cardui = LoadXaml();
+            var cardui = LoadXaml(templatefilename);
             //cardui.BeginInit();
             //cardui.EndInit();
             //cardui.UpdateLayout();
@@ -119,9 +144,9 @@ namespace FCGCardCreator
 
             int count = 0;
 
-            foreach (var hero in heroes)
+            foreach (var card in cards)
             {
-                cardui.DataContext = hero;
+                cardui.DataContext = card;
                 cardui.UpdateLayout();
 
                 count++;
@@ -157,16 +182,21 @@ namespace FCGCardCreator
             page.Children.Add(wrap);
             PageContent pagecontent;
 
-            foreach (DataTypes.HeroData hero in HeroBox.SelectedItems)
+            TabItem tabitem = (TabItem)Tabs.SelectedItem;
+            var listbox = tabitem.FindName("CardList") as ListBox;
+            var filenamebox = tabitem.FindName("FileName") as TextBox;
+
+            foreach (dynamic card in listbox.SelectedItems)
             {
-                for (var i = 0; i < hero.Count; i++)
+                int cardcount = Int32.Parse(card.Count);
+                for (var i = 0; i < cardcount; i++)
                 {
-                    var cardui = LoadXaml();
+                    var cardui = LoadXaml(filenamebox.Text);
                     cardui.Margin = new Thickness(10);
                     cardui.Measure(new Size(cardui.Width, cardui.Height));
                     cardui.Arrange(new Rect(0, 0, cardui.Width, cardui.Height));
 
-                    cardui.DataContext = hero;
+                    cardui.DataContext = card;
                     cardui.UpdateLayout();
                     wrap.Children.Add(cardui);
                     onthispage++;

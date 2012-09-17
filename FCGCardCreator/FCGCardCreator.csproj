@@ -106,7 +106,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTypes.cs" />
     <Compile Include="DocumentList.xaml.cs">
       <DependentUpon>DocumentList.xaml</DependentUpon>
     </Compile>

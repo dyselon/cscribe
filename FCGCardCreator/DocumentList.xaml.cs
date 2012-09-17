@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 
 using Google.GData.Client;
 using Google.GData.Spreadsheets;
+using System.Dynamic;
 
 namespace FCGCardCreator
 {
@@ -60,23 +61,29 @@ namespace FCGCardCreator
             
             // Get list of worksheets
             WorksheetFeed worksheetfeed = sheetentry.Worksheets;
-            Dictionary<string, Worksheet> worksheets = new Dictionary<string, Worksheet>(4);
             foreach (WorksheetEntry worksheetentry in worksheetfeed.Entries)
             {
                 Worksheet worksheet = new Worksheet(worksheetentry, service);
-                worksheets.Add(worksheet.Title, worksheet);
-            }
-
-            // Turn it into Hero collection
-            List<DataTypes.HeroData> heroes = ParseHeroes(worksheets["Heroes"]);
-            foreach(var hero in heroes)
-            {
-                host.AddHero(hero);
+                host.AddTab(worksheet.Title);
+                for (uint row = 1; row < worksheet.Rows; row++)
+                {
+                    dynamic card = new ExpandoObject();
+                    IDictionary<String, Object> carddict = (IDictionary<String, Object>)card;
+                    for (uint col = 0; col < worksheet.Cols; col++)
+                    {
+                        var colname = worksheet.GetString(0, col);
+                        colname.Replace(" ", "");
+                        var value = worksheet.GetString(row, col);
+                        carddict.Add(colname, value);
+                    }
+                    host.AddCardToTab(card, worksheet.Title);
+                }
             }
 
             this.Close();
         }
 
+        /*
         List<DataTypes.HeroData> ParseHeroes(Worksheet herosheet)
         {
             List<DataTypes.HeroData> heroes = new List<DataTypes.HeroData>((int)herosheet.Rows);
@@ -107,7 +114,7 @@ namespace FCGCardCreator
 
                 heroes.Add(hero);
             }
-
+            
             return heroes;
         }
 
@@ -154,6 +161,6 @@ namespace FCGCardCreator
                 default:
                     throw new Exception("Wha?");
             }
-        }
+        }*/
     }
 }
