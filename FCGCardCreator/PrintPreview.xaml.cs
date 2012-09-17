@@ -10,19 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace FCGCardCreator
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PrintPreview.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PrintPreview : Window
     {
-        public MainWindow()
+        public PrintPreview()
         {
             InitializeComponent();
+        }
+
+        public IDocumentPaginatorSource Document
+        {
+            get { return DocViewer.Document; }
+            set { DocViewer.Document = value; }
         }
     }
 }

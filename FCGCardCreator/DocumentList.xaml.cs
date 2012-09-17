@@ -68,9 +68,11 @@ namespace FCGCardCreator
             }
 
             // Turn it into Hero collection
-            ParseHeroes(worksheets["Heroes"]);
-            // Get second sheet
-            // Turn it into 
+            List<DataTypes.HeroData> heroes = ParseHeroes(worksheets["Heroes"]);
+            foreach(var hero in heroes)
+            {
+                host.AddHero(hero);
+            }
 
             this.Close();
         }
@@ -96,9 +98,12 @@ namespace FCGCardCreator
                 hero.Skills[2] = new DataTypes.SkillRating();
                 hero.Skills[2].Skill = ParseSkillType(herosheet.GetString(i, 11));
                 hero.Skills[2].Progression = (DataTypes.Progression)herosheet.GetInt(i, 12);
-                hero.Ability = new DataTypes.Ability();
-                hero.Ability.Name = herosheet.GetString(i, 13);
-                hero.Ability.Text = herosheet.GetString(i, 14);
+                var ability = new DataTypes.Ability();
+                ability.Name = herosheet.GetString(i, 13);
+                ability.Text = herosheet.GetString(i, 14);
+                hero.Ability = ability;
+                
+                hero.Count = 1; // Heroes are always one of a kind
 
                 heroes.Add(hero);
             }

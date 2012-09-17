@@ -11,26 +11,38 @@ namespace FCGCardCreator.DataTypes
     public enum Skill { Fighting, Magic, Divinity, Sneaking, Athletics, Knowledge, Diplomacy, Survival };
     public enum Progression { Fast = 3, Med = 2, Slow = 1 };
 
-    struct SkillRating
+    public struct SkillRating
     {
         public Skill Skill;
         public Progression Progression;
     }
 
-    struct Ability
+    public struct Ability
     {
         public string Name;
         public string Text;
     }
 
-    struct HeroData
+    public struct HeroData
     {
-        public string Name;
-        public string Subtitle;
-        public Race Race;
-        public Class Class;
-        public int HP;
-        public SkillRating[] Skills;
-        public Ability Ability;
+        public string Name { get; set; }
+        public string Subtitle { get; set; }
+        public Race Race { get; set; }
+        public Class Class { get; set; }
+        public int HP { get; set; }
+        public SkillRating[] Skills { get; set; }
+        public Ability Ability { get; set; }
+        public int Count { get; set; }
+
+        // Fake view model stuff
+        public string FullName
+        {
+            get { return String.Format("{0}, {1}", Name, Subtitle); }
+        }
+
+        public string CountString // An ugly hack until I figure out the right way to do viewmodels or whatever is needed.
+        {
+            get { return String.Format("{0}", Count); }
+        }
     }
 }
