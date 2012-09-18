@@ -24,7 +24,7 @@ namespace FCGCardCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private struct CardCategory {
+        private class CardCategory {
             public string CategoryName { get; set; }
             public ObservableCollection<dynamic> Cards { get; set; }
             public string XamlTemplateFilename { get; set; }
@@ -54,7 +54,7 @@ namespace FCGCardCreator
 
         public void AddTab(string tabname)
         {
-            tabdata.Add(new CardCategory { CategoryName = tabname, Cards = new ObservableCollection<dynamic>() });
+            tabdata.Add(new CardCategory { CategoryName = tabname, Cards = new ObservableCollection<dynamic>(), SelectedCards = new ObservableCollection<dynamic>() });
         }
 
         public void AddCardToTab(dynamic card, string tabname)
@@ -65,7 +65,13 @@ namespace FCGCardCreator
 
         private void HeroBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var that = this;
+            ListBox box = (ListBox)sender;
+            CardCategory category = (CardCategory)box.DataContext;
+            category.SelectedCards.Clear();
+            foreach (dynamic card in box.SelectedItems)
+            {
+                category.SelectedCards.Add(card);
+            }
         }
 
         private void BrowseTemplate(object sender, RoutedEventArgs e)
@@ -98,6 +104,8 @@ namespace FCGCardCreator
             var cardui = XamlReader.Load(stream.BaseStream) as FrameworkElement;
              */
             TextBox thisbox = (TextBox)sender;
+            CardCategory category = thisbox.DataContext as CardCategory;
+            category.XamlTemplateFilename = thisbox.Text;
 
             var cardui = LoadXaml(thisbox.Text);
             if (cardui == null) { return; }
@@ -182,16 +190,15 @@ namespace FCGCardCreator
             page.Children.Add(wrap);
             PageContent pagecontent;
 
-            TabItem tabitem = (TabItem)Tabs.SelectedItem;
-            var listbox = tabitem.FindName("CardList") as ListBox;
-            var filenamebox = tabitem.FindName("FileName") as TextBox;
+            CardCategory tabitem = (CardCategory)Tabs.SelectedItem;
+            var filename = tabitem.XamlTemplateFilename;
 
-            foreach (dynamic card in listbox.SelectedItems)
+            foreach (dynamic card in tabitem.SelectedCards)
             {
-                int cardcount = Int32.Parse(card.Count);
+                var cardcount = Int32.Parse(card.Count);
                 for (var i = 0; i < cardcount; i++)
                 {
-                    var cardui = LoadXaml(filenamebox.Text);
+                    var cardui = LoadXaml(filename);
                     cardui.Margin = new Thickness(10);
                     cardui.Measure(new Size(cardui.Width, cardui.Height));
                     cardui.Arrange(new Rect(0, 0, cardui.Width, cardui.Height));

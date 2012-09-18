@@ -26,8 +26,8 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <DockPanel DataContext="{Binding Path=Cards}">
-                        <ListBox x:Name="CardList" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
+                    <DockPanel DataContext="{Binding}">
+                        <ListBox x:Name="CardList" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding Path=Cards}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="Pink" BorderThickness="1" HorizontalAlignment="Stretch">
