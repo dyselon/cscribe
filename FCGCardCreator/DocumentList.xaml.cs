@@ -63,7 +63,7 @@ namespace FCGCardCreator
             WorksheetFeed worksheetfeed = sheetentry.Worksheets;
             foreach (WorksheetEntry worksheetentry in worksheetfeed.Entries)
             {
-                Worksheet worksheet = new Worksheet(worksheetentry, service);
+                Worksheet worksheet = GoogleWorksheetReader.Read(worksheetentry, service);
                 host.AddTab(worksheet.Title);
                 for (uint row = 1; row < worksheet.Rows; row++)
                 {

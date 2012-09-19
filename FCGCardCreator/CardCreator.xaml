@@ -18,7 +18,7 @@
             <Button x:Name="PrintSelected" Content="Print Selected..." Click="PrintSelected_Click"></Button>
             
         </StackPanel>
-        <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs">
+        <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs" SelectionChanged="Tabs_SelectionChanged">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Path=CategoryName}"/>

@@ -29,6 +29,7 @@ namespace FCGCardCreator
             public ObservableCollection<dynamic> Cards { get; set; }
             public string XamlTemplateFilename { get; set; }
             public ObservableCollection<dynamic> SelectedCards { get; set; }
+            public FrameworkElement CardUI { get; set; }
         }
         private ObservableCollection<CardCategory> tabdata = new ObservableCollection<CardCategory>();
 
@@ -37,6 +38,7 @@ namespace FCGCardCreator
             InitializeComponent();
             DataContext = tabdata;
 
+            /*
             AddTab("Heroes");
             dynamic card1 = new ExpandoObject();
             card1.Name = "Jack Hammer"; card1.Subtitle = "Woo!"; card1.Count = "5";
@@ -44,6 +46,8 @@ namespace FCGCardCreator
             dynamic card2 = new ExpandoObject();
             card2.Name = "Joe Schmo"; card2.Subtitle = "Rawr!"; card2.Count = "6";
             AddCardToTab(card2, "Heroes");
+            AddTab("Dicks");
+             */
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -106,14 +110,13 @@ namespace FCGCardCreator
             TextBox thisbox = (TextBox)sender;
             CardCategory category = thisbox.DataContext as CardCategory;
             category.XamlTemplateFilename = thisbox.Text;
+            category.CardUI = LoadXaml(thisbox.Text);
 
-            var cardui = LoadXaml(thisbox.Text);
-            if (cardui == null) { return; }
+            if (category.CardUI == null) { return; }
 
             var parent = thisbox.TemplatedParent as ContentPresenter;
             var cardcontainer = parent.ContentTemplate.FindName("CardContainer", parent) as Border;
-            cardcontainer.Child = cardui;
-            cardui.UpdateLayout();
+            cardcontainer.Child = category.CardUI;
         }
 
         private void ExportSelected_Click(object sender, RoutedEventArgs e)
@@ -234,6 +237,43 @@ namespace FCGCardCreator
             preview.ShowDialog();
 
 
+        }
+
+        private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is TabControl)
+            {
+                Dispatcher.BeginInvoke(new Action( () =>
+                    {
+                        try
+                        {
+                            CardCategory category = Tabs.SelectedItem as CardCategory;
+                            var cp = Tabs.Template.FindName("PART_SelectedContentHost", Tabs) as ContentPresenter;
+                            var cardcontainer = Tabs.ContentTemplate.FindName("CardContainer", cp) as Border;
+                            cardcontainer.Child = category.CardUI;
+                        }
+                        catch { }
+                    }
+                ));
+            }
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
     }
 }

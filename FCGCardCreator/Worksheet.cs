@@ -4,9 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Google.GData.Client;
-using Google.GData.Spreadsheets;
-
 namespace FCGCardCreator
 {
     enum DataType { String, Number };
@@ -23,40 +20,18 @@ namespace FCGCardCreator
         private uint cols;
         private Cell[,] data;
 
-        public Worksheet(WorksheetEntry entry, SpreadsheetsService service)
+        public Worksheet(string title, uint rows, uint cols)
         {
-            this.title = entry.Title.Text;
-            this.rows = entry.Rows;
-            this.cols = entry.Cols;
+            this.title = title;
+            this.rows = rows;
+            this.cols = cols;
             data = new Cell[rows,cols];
-
-            CellQuery cq = new CellQuery(entry.CellFeedLink);
-            CellFeed feed = service.Query(cq);
-
-            foreach (CellEntry cellentry in feed.Entries)
-            {
-                Cell cell = new Cell();
-                double output;
-                if(Double.TryParse(cellentry.Cell.Value, out output))
-                {
-                    cell.Type = DataType.Number;
-                    cell.Value = output;
-                }
-                else
-                {
-                    cell.Type = DataType.String;
-                    cell.Value = cellentry.Cell.Value;
-                }
-                data[cellentry.Cell.Row - 1, cellentry.Cell.Column - 1] = cell;
-            }
         }
 
         public Cell this[uint x, uint y]
         {
-            get
-            {
-                return data[x,y];
-            }
+            get { return data[x,y]; }
+            set { data[x, y] = value; }
         }
 
         public string GetString(uint x, uint y)
