@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.3.0.0.2\lib\net20\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Google.GData.AccessControl, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.GData.AccessControl.2.1.0.0\lib\Google.GData.AccessControl.dll</HintPath>
     </Reference>
@@ -72,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CardSet.cs" />
     <Compile Include="GoogleWorksheetReader.cs" />
     <Compile Include="PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>

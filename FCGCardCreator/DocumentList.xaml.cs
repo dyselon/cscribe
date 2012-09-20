@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 
 using Google.GData.Client;
 using Google.GData.Spreadsheets;
-using System.Dynamic;
 
 namespace FCGCardCreator
 {
@@ -58,27 +57,9 @@ namespace FCGCardCreator
             ListBoxItem selected = Documents.SelectedItem as ListBoxItem;
             if (selected == null) { return; }
             SpreadsheetEntry sheetentry = selected.Tag as SpreadsheetEntry;
-            
-            // Get list of worksheets
-            WorksheetFeed worksheetfeed = sheetentry.Worksheets;
-            foreach (WorksheetEntry worksheetentry in worksheetfeed.Entries)
-            {
-                Worksheet worksheet = GoogleWorksheetReader.Read(worksheetentry, service);
-                host.AddTab(worksheet.Title);
-                for (uint row = 1; row < worksheet.Rows; row++)
-                {
-                    dynamic card = new ExpandoObject();
-                    IDictionary<String, Object> carddict = (IDictionary<String, Object>)card;
-                    for (uint col = 0; col < worksheet.Cols; col++)
-                    {
-                        var colname = worksheet.GetString(0, col);
-                        colname.Replace(" ", "");
-                        var value = worksheet.GetString(row, col);
-                        carddict.Add(colname, value);
-                    }
-                    host.AddCardToTab(card, worksheet.Title);
-                }
-            }
+
+            var set = host.Tabs.DataContext as CardSet;
+            set.ParseFromGoogle(sheetentry, service);
 
             this.Close();
         }

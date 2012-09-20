@@ -24,19 +24,12 @@ namespace FCGCardCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private class CardCategory {
-            public string CategoryName { get; set; }
-            public ObservableCollection<dynamic> Cards { get; set; }
-            public string XamlTemplateFilename { get; set; }
-            public ObservableCollection<dynamic> SelectedCards { get; set; }
-            public FrameworkElement CardUI { get; set; }
-        }
         private ObservableCollection<CardCategory> tabdata = new ObservableCollection<CardCategory>();
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = tabdata;
+            DataContext = new CardSet();
 
             /*
             AddTab("Heroes");
@@ -54,17 +47,6 @@ namespace FCGCardCreator
         {
             ImportWindow window = new ImportWindow(this);
             window.ShowDialog();
-        }
-
-        public void AddTab(string tabname)
-        {
-            tabdata.Add(new CardCategory { CategoryName = tabname, Cards = new ObservableCollection<dynamic>(), SelectedCards = new ObservableCollection<dynamic>() });
-        }
-
-        public void AddCardToTab(dynamic card, string tabname)
-        {
-            var tab = tabdata.Single<CardCategory>(category => category.CategoryName == tabname);
-            tab.Cards.Add(card);
         }
 
         private void HeroBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
