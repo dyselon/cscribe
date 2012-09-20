@@ -11,12 +11,13 @@
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Margin" Value="10,10"/>
+                    <Setter Property="Padding" Value="10,2"/>
                 </Style>
             </StackPanel.Resources>
-            <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="ImportButton_Click"/>
+            <Button x:Name="ImportButton" Content="Import (Google)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ImportButton_Click"/>
+            <Button x:Name="ImportExcelButton" Content="Import (.xlsx)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ImportExcelButton_Click"/>
             <Button x:Name="ExportSelected" Content="Export Selected..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ExportSelected_Click"/>
             <Button x:Name="PrintSelected" Content="Print Selected..." Click="PrintSelected_Click"></Button>
-            
         </StackPanel>
         <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs" SelectionChanged="Tabs_SelectionChanged">
             <TabControl.ItemTemplate>

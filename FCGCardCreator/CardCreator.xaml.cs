@@ -49,6 +49,21 @@ namespace FCGCardCreator
             window.ShowDialog();
         }
 
+        private void ImportExcelButton_Click(object sender, RoutedEventArgs e)
+        {
+            var opendialog = new Microsoft.Win32.OpenFileDialog();
+            opendialog.DefaultExt = ".xlsx";
+            opendialog.Filter = "Excel files (.xlsx)|*.xlsx";
+
+            var result = opendialog.ShowDialog();
+
+            if (result == true)
+            {
+                CardSet set = DataContext as CardSet;
+                set.ParseFromExcel(opendialog.FileName);
+            }
+        }
+
         private void HeroBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox box = (ListBox)sender;

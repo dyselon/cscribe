@@ -3,3 +3,6 @@ Excel reading
 Python added properties
 Try to pull logic out from main window
 Config tab?
+
+Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
+Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
