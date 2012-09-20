@@ -17,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Dynamic;
 
+using IronPython.Hosting;
+
 namespace FCGCardCreator
 {
     /// <summary>
@@ -271,6 +273,33 @@ namespace FCGCardCreator
                 }
             }
             return null;
+        }
+
+        private void PythonTransform_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+
+            var opendialog = new Microsoft.Win32.OpenFileDialog();
+
+            opendialog.DefaultExt = ".py";
+            opendialog.Filter = "Python files (.py)|*.py";
+
+            var result = opendialog.ShowDialog();
+
+            if (result == true)
+            {
+                var py = Python.CreateEngine();
+                var source = py.CreateScriptSourceFromFile(opendialog.FileName);
+
+                var category = button.DataContext as CardCategory;
+
+                foreach (dynamic card in category.Cards)
+                {
+                    var scope = py.CreateScope();
+                    scope.SetVariable("card", card);
+                    source.Execute(scope);
+                }
+            }
         }
     }
 }
