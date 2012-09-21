@@ -121,16 +121,9 @@ namespace FCGCardCreator
         private void ExportSelected_Click(object sender, RoutedEventArgs e)
         {
             Button thisbutton = (Button)sender;
-            var parent = thisbutton.TemplatedParent as ContentPresenter;
-            var cardlist = parent.ContentTemplate.FindName("CardList", parent) as ListBox;
-            var filenamebox = parent.FindName("FileName") as TextBox;
 
-            var selectedcards = new List<dynamic>();
-            foreach (var card in cardlist.SelectedItems)
-            {
-                selectedcards.Add(card);
-            }
-            Export(selectedcards, filenamebox.Text);
+            var category = Tabs.SelectedItem as CardCategory;
+            Export(category.SelectedCards, category.XamlTemplateFilename);
         }
 
         private FrameworkElement LoadXaml(string filename)
@@ -197,7 +190,19 @@ namespace FCGCardCreator
 
             foreach (dynamic card in tabitem.SelectedCards)
             {
-                var cardcount = Int32.Parse(card.Count);
+                int cardcount;
+                double floatcardcount;
+                if (!Int32.TryParse(card.Count, out cardcount))
+                {
+                    if (Double.TryParse(card.Count, out floatcardcount))
+                    {
+                        cardcount = (int)floatcardcount;
+                    }
+                    else
+                    {
+                        cardcount = 1;
+                    }
+                }
                 for (var i = 0; i < cardcount; i++)
                 {
                     var cardui = LoadXaml(filename);

@@ -1,8 +1,14 @@
-Python added properties
-Try to pull logic out from main window
+Python can add new controls to cardUI (that get added/removed correctly on card switch?)
+Try to pull logic out from main window (sort of done)
 Config tab?
+
+Remove requirement of "count" column.
+Optional additional information .xaml? Or just make a right dock property grid?
 
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
 Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
+What happens when you import data more than once?
+.csv import?
+Project settings, or some other way to avoid selecting templates and scripts over and over.
 
 Export to OCTGN?

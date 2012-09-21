@@ -1,0 +1,35 @@
+Card Template Thingy That Needs A Name
+v. 0.1
+
+WHAT IS IT?
+Card Template Thingy is software that transforms spreadsheets of data into images or printable files. Its intended use is to create images for playtesting and producing card games, though it could probably be used for other templating purposes as well.
+
+HOW DOES IT WORK?
+The templating process involves 3 basic steps:
+* Importing data from a properly formated Excel (2007+) or Google Spreadsheet.
+* Optionally transforming that data into something more useful with a python script.
+* Loading a .xaml template that describes the visual look and feel of each row of data.
+
+IMPORTING DATA
+Successfully importing data requires the source spreadsheet to be formatted properly.
+
+Each tab in the source spreadsheet is considered a different card *type*. Each type may have its own .xaml layout and python script.
+
+The top row of each tab is assumed to be header data, and should contain a useful name for each column, as the names used here will be referenced in your .xaml files.
+
+Every tab is assumed to have a "Name" and "Count" column. These will be used by the program to differentiate the cards in the card list, and to know how many copies of each card to print.
+
+TRANSFORMING DATA WITH PYTHON
+After importing your data, you can transform that data with a python script. This can be useful to add additional derived data from a card. For example, say your game requires the background image of each card to be based on its casting cost, as in Magic: the Gathering. You could add an additional column to your spreadsheet that specifies the correct background image for each card, or you could write a python script that infers the correct background image for you, and adds that information to each card. This keeps your spreadsheet clean of redundant data, and provides extra flexibility to your .xaml layouts.
+
+To run a python script, simply click the "Transform by Python" button near the bottom of the screen after importing data. This will pop up a dialog allowing you to select the script to run.
+
+PYTHON SCRIPTING TECHNICAL BULLSHIT
+The scripting is pretty straightforward. The script runs once for each card. Inside the script, you can add or remove whatever properties you want from the global "card" variable, and these will then be accessible to your .xaml layouts.
+
+XAML LAYOUTS
+The actual hard part of laying out what data goes where on a card is done by .xaml, an xml based language created by Microsoft to make Windows applications. This means that your layout files have access to the same powerful array of layout controls that every Windows program does, and can use pre-existing tools like Visual Studio or XamlPad to create those layouts.
+
+How to actually write a .xaml file is a large and incredibly complicated topic (as I found out actually writing the UI for this program), and outside the scope of this document.
+
+The controls I've found most useful to actually create .xaml files are Grid and StackPanel for laying out where data goes, and Label, Image, TextBlock, and Border for actually presenting the data.
