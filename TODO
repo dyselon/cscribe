@@ -1,4 +1,8 @@
-Python can add new controls to cardUI (that get added/removed correctly on card switch?)
+Python can add new controls to cardUI (that get added/removed correctly on card switch?), or will fancytext do it?
+Fix # of cards on page, try and remove extra print dialog
+Exporting images needs to name things more intelligently (optionally pulling filename from a card attribute?)
+Reloading .xaml should actually work.
+Reloading pything should re-operate on source data... Keep a copy somewhere?
 Try to pull logic out from main window (sort of done)
 Config tab?
 

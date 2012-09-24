@@ -28,8 +28,23 @@ PYTHON SCRIPTING TECHNICAL BULLSHIT
 The scripting is pretty straightforward. The script runs once for each card. Inside the script, you can add or remove whatever properties you want from the global "card" variable, and these will then be accessible to your .xaml layouts.
 
 XAML LAYOUTS
-The actual hard part of laying out what data goes where on a card is done by .xaml, an xml based language created by Microsoft to make Windows applications. This means that your layout files have access to the same powerful array of layout controls that every Windows program does, and can use pre-existing tools like Visual Studio or XamlPad to create those layouts.
+The actual hard part of laying out what data goes where on a card is done by .xaml, an xml based language created by Microsoft to make Windows applications. This means that your layout files have access to the same powerful array of layout controls that every Windows program does, and can use pre-existing tools like Visual Studio or XamlPad to create those layouts. I've been having luck with Kaxaml.
 
 How to actually write a .xaml file is a large and incredibly complicated topic (as I found out actually writing the UI for this program), and outside the scope of this document.
 
 The controls I've found most useful to actually create .xaml files are Grid and StackPanel for laying out where data goes, and Label, Image, TextBlock, and Border for actually presenting the data.
+
+EXPORTING TO IMAGES
+To create images of your cards, select the cards you want to make images of (ctrl+a works to select everything on a tab), and hit the "Export Selected..." button. This will generate images in the program's directory. The cards will be named after the tab, and numbered sequentially (tab001.png, tab002.png, etc). This means it's pretty easy to overwrite your own images if you're only exporting a couple images at a time, and means you have to manually move files around a lot. I'll fix this in the future.
+
+PRINTING
+Printing cards directly works, but is a little unintuitive. Select the cards you want to print, just like exporting images. Then hit "Print Selected..." This will open the print dialog, but this one won't actually print anything. It's just used to get paper size. Configure your printing options the way you want, then press Print. A Print Preview window will appear; from here, you can hit Print, and it will actually work.
+
+Right now, the program will always try and put 8 cards on a portrait page, and 9 on a landscape. This is dumb, but, it's the way it works right now. My apologies.
+
+SOME KNOWN ISSUES/GOTCHAS
+* If you browse for a new .xaml file, it won't refresh your layout.
+* If your python fails to execute for some reason, crash-a-roo.
+* Running your python more than once will retransform your tranformed data, not your original data.
+* As stated above, printing sucks.
+* This thing needs a name.
