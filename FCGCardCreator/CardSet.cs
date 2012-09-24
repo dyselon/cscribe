@@ -104,7 +104,7 @@ namespace FCGCardCreator
                 string[] headers = new string[sheet.LastCol + 1];
                 for (uint i = 0; i <= sheet.LastCol; i++)
                 {
-                    headers[i] = firstrow.GetCell(i).GetFormattedValue();
+                    headers[i] = firstrow.GetCell(i).GetFormattedValue().Replace(" ", "");
                 }
 
                 for (uint row = 1; row <= sheet.LastRow; row++)
