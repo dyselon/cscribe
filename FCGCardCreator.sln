@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCGCardCreator", "FCGCardCreator\FCGCardCreator.csproj", "{119D64A1-DE24-40F2-A2EC-0ECC582F5E89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterpertedTextBlock", "InterpertedTextBlock\InterpertedTextBlock.csproj", "{37449964-4810-450A-A881-066CCA2D06A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{119D64A1-DE24-40F2-A2EC-0ECC582F5E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{119D64A1-DE24-40F2-A2EC-0ECC582F5E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{119D64A1-DE24-40F2-A2EC-0ECC582F5E89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37449964-4810-450A-A881-066CCA2D06A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37449964-4810-450A-A881-066CCA2D06A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37449964-4810-450A-A881-066CCA2D06A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37449964-4810-450A-A881-066CCA2D06A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

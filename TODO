@@ -4,7 +4,8 @@ Exporting images needs to name things more intelligently (optionally pulling fil
 Reloading .xaml should actually work.
 Reloading pything should re-operate on source data... Keep a copy somewhere?
 Try to pull logic out from main window (sort of done)
-Config tab?
+Config tab? Can automate applying python, setup image dictionaries?
+Close-able tabs?
 
 Remove requirement of "count" column.
 Optional additional information .xaml? Or just make a right dock property grid?

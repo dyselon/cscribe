@@ -167,7 +167,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\InterpertedTextBlock\InterpertedTextBlock.csproj">
+      <Project>{37449964-4810-450a-a881-066cca2d06a8}</Project>
+      <Name>InterpertedTextBlock</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
