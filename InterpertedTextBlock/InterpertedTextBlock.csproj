@@ -45,18 +45,11 @@
   <ItemGroup>
     <Compile Include="InterpertedTextBlock.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="temp.xaml.cs">
-      <DependentUpon>temp.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="InterpertedTextBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="temp.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

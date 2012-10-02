@@ -50,7 +50,7 @@ namespace InterpertedTextBlock
             {
                 text.Inlines.Add(inline);
             }
-            text.Inlines.Add(new Run("Test!"));
+            //text.Inlines.Add(new Run("Test!"));
         }
 
         private struct ParseState
