@@ -133,7 +133,10 @@ namespace FCGCardCreator
                 return null;
             }
             var stream = new StreamReader(filename);
-            return XamlReader.Load(stream.BaseStream) as FrameworkElement;
+            var context = new ParserContext {
+                BaseUri = new Uri(System.IO.Path.GetDirectoryName(filename) + "\\", UriKind.Absolute)
+            };
+            return XamlReader.Load(stream.BaseStream, context) as FrameworkElement;
         }
 
         private void Export(IList<dynamic> cards, string templatefilename)
@@ -302,6 +305,9 @@ namespace FCGCardCreator
                 {
                     var scope = py.CreateScope();
                     scope.SetVariable("card", card);
+                    scope.SetVariable("category", category);
+                    scope.SetVariable("templatefile", category.XamlTemplateFilename);
+                    scope.SetVariable("templatepath", System.IO.Path.GetDirectoryName(category.XamlTemplateFilename));
                     source.Execute(scope);
                 }
             }

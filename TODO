@@ -1,19 +1,31 @@
+FIX PRINTING
+- Remove requirement of "count" column. Add dialog that asks # per card OR reads from a field
+- Fix # of cards on page
+- try and remove extra print dialog
+
+CLEANUP EXPORTING
+Directory selection for saving out images
+Images should be named inteligently. Prompt for prefix?
+
+PYTHON CLEANUP
+Figure out solution for images directory
+Graceful reporting of python errors
+Document additional variables accessible from python
 Python can add new controls to cardUI (that get added/removed correctly on card switch?), or will fancytext do it?
-Fix # of cards on page, try and remove extra print dialog
-Exporting images needs to name things more intelligently (optionally pulling filename from a card attribute?)
+Reloading python should re-operate on source data... Keep a copy somewhere?
+Right dock property grid?
+
+OTHER USABILITY
 Reloading .xaml should actually work.
-Reloading pything should re-operate on source data... Keep a copy somewhere?
 Try to pull logic out from main window (sort of done)
-Config tab? Can automate applying python, setup image dictionaries?
-Close-able tabs?
-
-Remove requirement of "count" column.
-Optional additional information .xaml? Or just make a right dock property grid?
-
-Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
+Config tab? Can automate applying python, setup image dictionaries? Project files, maybe?
+Close-able/reload-able tabs?
 Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
 What happens when you import data more than once?
-.csv import?
-Project settings, or some other way to avoid selecting templates and scripts over and over.
 
+REFACTOR
+Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
+
+FEATURE WISHLIST
 Export to OCTGN?
+.csv import?
