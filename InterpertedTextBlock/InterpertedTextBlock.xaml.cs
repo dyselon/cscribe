@@ -19,12 +19,8 @@ namespace InterpertedTextBlock
     /// <summary>
     /// Interaction logic for InterpertedTextBlock.xaml
     /// </summary>
-    public partial class InterpertedTextBlock : UserControl
+    public partial class InterpertedTextBlock : TextBlock
     {
-        public InterpertedTextBlock()
-        {
-            InitializeComponent();
-        }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
@@ -42,7 +38,7 @@ namespace InterpertedTextBlock
         private static void onTextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             InterpertedTextBlock block = (InterpertedTextBlock)sender;
-            var text = block.TextBlock;
+            var text = block;
             var newtext = (string)args.NewValue;
             text.Inlines.Clear();
             var newcontent = block.ParseString(newtext);
@@ -184,11 +180,11 @@ namespace InterpertedTextBlock
         private EscapeCharInfo FindNextEscapeChar(string text, int startingpos)
         {
             var info = new EscapeCharInfo();
-            info.Pos = -1;
+            info.Pos = text.Length+1;
 
             // First look for a '<'
             var pos = text.IndexOf('<', startingpos);
-            if (pos > info.Pos)
+            if (pos < info.Pos && pos >= 0)
             {
                 info.EscapeChar = '<';
                 info.Pos = pos;
@@ -196,7 +192,7 @@ namespace InterpertedTextBlock
 
             // Next look for a '['
             pos = text.IndexOf('[', startingpos);
-            if (pos > info.Pos)
+            if (pos < info.Pos && pos >= 0)
             {
                 info.EscapeChar = '[';
                 info.Pos = pos;
@@ -204,11 +200,13 @@ namespace InterpertedTextBlock
 
             // Now a '&'
             pos = text.IndexOf('&', startingpos);
-            if (pos > info.Pos)
+            if (pos < info.Pos && pos >= 0)
             {
                 info.EscapeChar = '&';
                 info.Pos = pos;
             }
+
+            if (info.Pos > text.Length) { info.Pos = -1; }
 
             return info;
         }
