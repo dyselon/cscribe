@@ -22,14 +22,14 @@ namespace InterpertedTextBlock
     public partial class InterpertedTextBlock : TextBlock
     {
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+        new public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
             typeof(string),
             typeof(InterpertedTextBlock),
             new UIPropertyMetadata("Default", onTextPropertyChanged)
         );
 
-        public string Text
+        new public string Text
         {
             get { return (string)this.GetValue(TextProperty); }
             set { this.SetValue(TextProperty, value); }
