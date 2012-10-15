@@ -2,6 +2,14 @@ FIX PRINTING
 - Remove requirement of "count" column. Add dialog that asks # per card OR reads from a field
 - Fix # of cards on page
 - try and remove extra print dialog
+- Print All
+
+PROJECT SETTINGS
+- Remember data source. Be able to refresh data from that source.
+- Remember tabs, as well as per-tab options, including:
+  - .xaml layout
+  - python script
+  - python options
 
 CLEANUP EXPORTING
 Directory selection for saving out images
@@ -22,6 +30,7 @@ Config tab? Can automate applying python, setup image dictionaries? Project file
 Close-able/reload-able tabs?
 Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
 What happens when you import data more than once?
+Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
 
 REFACTOR
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
