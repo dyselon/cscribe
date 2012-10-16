@@ -17,8 +17,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Dynamic;
 
-using IronPython.Hosting;
-
 namespace FCGCardCreator
 {
     /// <summary>
@@ -87,25 +85,18 @@ namespace FCGCardCreator
 
             if (result == true)
             {
-                Button thisbutton = (Button)sender;
+                /*Button thisbutton = (Button)sender;
                 var parent = thisbutton.TemplatedParent as ContentPresenter;
                 var filename = parent.ContentTemplate.FindName("FileName", parent) as TextBox;
-                filename.Text = opendialog.FileName;
+                filename.Text = opendialog.FileName;*/
+                Button thisbutton = (Button)sender;
+                CardCategory category = (CardCategory)thisbutton.DataContext;
+                category.XamlTemplateFilename = opendialog.FileName;
             }
         }
 
         private void FileName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            /*
-            var filename = HeroFileName.Text;
-            if (!File.Exists(filename))
-            {
-                return;
-            }
-
-            var stream = new StreamReader(filename);
-            var cardui = XamlReader.Load(stream.BaseStream) as FrameworkElement;
-             */
             TextBox thisbox = (TextBox)sender;
             CardCategory category = thisbox.DataContext as CardCategory;
             category.XamlTemplateFilename = thisbox.Text;
@@ -116,6 +107,27 @@ namespace FCGCardCreator
             var parent = thisbox.TemplatedParent as ContentPresenter;
             var cardcontainer = parent.ContentTemplate.FindName("CardContainer", parent) as Border;
             cardcontainer.Child = category.CardUI;
+        }
+
+        private void BrowsePython(object sender, RoutedEventArgs e)
+        {
+            var opendialog = new Microsoft.Win32.OpenFileDialog();
+            opendialog.DefaultExt = ".py";
+            opendialog.Filter = "Python files (.py)|*.py";
+
+            var result = opendialog.ShowDialog();
+
+            if (result == true)
+            {
+                Button thisbutton = (Button)sender;
+                CardCategory category = (CardCategory)thisbutton.DataContext;
+                category.PythonFilename = opendialog.FileName;
+            }
+        }
+
+        private void PythonFileName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
 
         private void ExportSelected_Click(object sender, RoutedEventArgs e)
@@ -281,36 +293,6 @@ namespace FCGCardCreator
                 }
             }
             return null;
-        }
-
-        private void PythonTransform_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-
-            var opendialog = new Microsoft.Win32.OpenFileDialog();
-
-            opendialog.DefaultExt = ".py";
-            opendialog.Filter = "Python files (.py)|*.py";
-
-            var result = opendialog.ShowDialog();
-
-            if (result == true)
-            {
-                var py = Python.CreateEngine();
-                var source = py.CreateScriptSourceFromFile(opendialog.FileName);
-
-                var category = button.DataContext as CardCategory;
-
-                foreach (dynamic card in category.Cards)
-                {
-                    var scope = py.CreateScope();
-                    scope.SetVariable("card", card);
-                    scope.SetVariable("category", category);
-                    scope.SetVariable("templatefile", category.XamlTemplateFilename);
-                    scope.SetVariable("templatepath", System.IO.Path.GetDirectoryName(category.XamlTemplateFilename));
-                    source.Execute(scope);
-                }
-            }
         }
     }
 }

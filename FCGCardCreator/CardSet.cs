@@ -7,12 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using System.Collections.Specialized;
+using System.ComponentModel;
+
 using Google.GData.Client;
 using Google.GData.Spreadsheets;
 
 using System.Dynamic;
 
 using Net.SourceForge.Koogra;
+
+using IronPython.Hosting;
+using IronPython.Runtime;
+using Microsoft.Scripting.Hosting;
 
 namespace FCGCardCreator
 {
@@ -30,7 +37,7 @@ namespace FCGCardCreator
         public void AddCardToTab(dynamic card, string tabname)
         {
             var tab = this.Single<CardCategory>(category => category.CategoryName == tabname);
-            tab.Cards.Add(card);
+            tab.Add(card);
         }
 
         public void ParseFromGoogle(SpreadsheetEntry workbook, SpreadsheetsService service)
@@ -123,12 +130,138 @@ namespace FCGCardCreator
         }
     }
 
-    public class CardCategory
+    public class CardCategory : INotifyPropertyChanged
     {
-        public string CategoryName { get; set; }
-        public ObservableCollection<dynamic> Cards { get; set; }
-        public string XamlTemplateFilename { get; set; }
-        public ObservableCollection<dynamic> SelectedCards { get; set; }
+        public CardCategory()
+        {
+            OriginalCards = new ObservableCollection<dynamic>();
+            Cards = new ObservableCollection<dynamic>();
+            SelectedCards = new ObservableCollection<dynamic>();
+            Options = new ObservableCollection<BaseCardOption>();
+            PropertyChanged += PythonFileChanged;
+        }
+
+        private string categoryname;
+        public string CategoryName { get { return categoryname; } set { categoryname = value; notify("CategoryName"); } }
+        
+        private string xamlfile;
+        public string XamlTemplateFilename { get { return xamlfile; } set { xamlfile = value; notify("XamlTemplateFilename"); } }
         public FrameworkElement CardUI { get; set; }
+
+        private string pythonfile;
+        public string PythonFilename { get { return pythonfile; } set { pythonfile = value; notify("PythonFilename"); } }
+        private dynamic transformfunction;
+
+        public ObservableCollection<dynamic> OriginalCards { get; set; }
+        public ObservableCollection<dynamic> Cards { get; set; }
+        public ObservableCollection<dynamic> SelectedCards { get; set; }
+
+        public ObservableCollection<BaseCardOption> Options { get; set; }
+        private Dictionary<string, string> PythonFriendlyOptions = new Dictionary<string, string>();
+
+        private void notify(string prop) { if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); } }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public static void PythonFileChanged(Object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "PythonFilename")
+            {
+                CardCategory category = (CardCategory)sender;
+                category.UpdatePython();
+            }
+        }
+
+        private dynamic CopyCard(dynamic original)
+        {
+            dynamic copy = new ExpandoObject();
+            IDictionary<String, Object> origdict = (IDictionary<String, Object>)original;
+            IDictionary<String, Object> copydict = (IDictionary<String, Object>)copy;
+            foreach (var pair in origdict)
+            {
+                copydict.Add(pair.Key, pair.Value);
+            }
+            return copy;
+        }
+
+        public void Add(dynamic card)
+        {
+            OriginalCards.Add(card);
+            var copy = CopyCard(card);
+            if (transformfunction != null)
+            {
+                transformfunction(copy);
+            }
+            Cards.Add(copy);
+        }
+
+        public void UpdatePython()
+        {
+            ScriptScope scope = null;
+            try
+            {
+                var py = Python.CreateEngine();
+                var source = py.CreateScriptSourceFromFile(this.pythonfile);
+                scope = py.CreateScope();
+                source.Execute(scope);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            if (scope == null) { return; }
+
+            Options.Clear();
+            PythonFriendlyOptions.Clear();
+            if (scope.ContainsVariable("Options"))
+            {
+                IDictionary<dynamic, dynamic> options = scope.GetVariable("Options");
+                foreach (KeyValuePair<dynamic, dynamic> optioninfo in options)
+                {
+                    BaseCardOption option;
+                    if (optioninfo.Value == "file")
+                    {
+                        option = new FileCardOption();
+                    }
+                    else if (optioninfo.Value == "dir")
+                    {
+                        option = new FolderCardOption();
+                    }
+                    else
+                    {
+                        option = new StringCardOption();
+                    }
+                    option.Name = optioninfo.Key;
+                    option.value = "";
+
+                    this.Options.Add(option);
+                    this.PythonFriendlyOptions.Add(option.Name, option.value);
+                }
+            }
+
+            if (scope.ContainsVariable("Transform"))
+            {
+                this.transformfunction = scope.GetVariable("Transform");
+                Cards.Clear();
+                foreach (var card in OriginalCards)
+                {
+                    var newcard = CopyCard(card);
+                    transformfunction(newcard, PythonFriendlyOptions);
+                    Cards.Add(newcard);
+                }
+            }
+        }
+
+
     }
+
+    abstract public class BaseCardOption
+    {
+        public string Name { get; set; }
+        public string value;
+    }
+    public class StringCardOption : BaseCardOption { }
+    public class FileCardOption : BaseCardOption { }
+    public class FolderCardOption : BaseCardOption { }
+
 }
