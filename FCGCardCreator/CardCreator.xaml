@@ -1,29 +1,42 @@
 ﻿<Window x:Class="FCGCardCreator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:this="clr-namespace:FCGCardCreator"
         Title="FCG Card Creator" Height="Auto" Width="Auto">
     <Window.Resources>
-        <DataTemplate DataType="x:Type FolderCardOption">
-            <Border BorderBrush="Black" BorderThickness="2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="{Binding Name}"></Label>
-                </Grid>
-            </Border>
+        <DataTemplate DataType="{x:Type this:FolderCardOption}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Name}"></Label>
+                <TextBox Grid.Column="1" Text="{Binding Value}"></TextBox>
+                <Button Grid.Column="2" Name="ScriptOptionFolderBrowse" Click="ScriptOptionFolderBrowse_Click">Browse...</Button>
+            </Grid>
         </DataTemplate>
-        <DataTemplate DataType="x:Type StringCardOption">
-            <Border BorderBrush="Blue" BorderThickness="2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="{Binding Name}"></Label>
-                </Grid>
-            </Border>
+        <DataTemplate DataType="{x:Type this:FileCardOption}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Name}"></Label>
+                <TextBox Grid.Column="1" Text="{Binding Value}"></TextBox>
+                <Button Grid.Column="2" Name="ScriptOptionFolderBrowse" Click="ScriptOptionFileBrowse_Click">Browse...</Button>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type this:StringCardOption}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Content="{Binding Name}"></Label>
+                <TextBox Grid.Column="1" Text="{Binding Value}"></TextBox>
+            </Grid>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -74,9 +87,7 @@
                             <Button Grid.Row="3" x:Name="PythonBrowse" Grid.Column="1" Margin="10,0" Padding="10,0" Click="BrowsePython">Browse...</Button>
                             <Label Grid.Row="4">Script Options</Label>
                             <ItemsControl Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Options}">
-                                <ItemsControl.Resources>
 
-                                </ItemsControl.Resources>
                             </ItemsControl>
                             <ListBox Grid.Row="6" Grid.ColumnSpan="2" x:Name="CardList" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding Path=Cards}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
                                 <ListBox.ItemTemplate>

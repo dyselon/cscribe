@@ -27,11 +27,22 @@ namespace FCGCardCreator
     {
         public void AddCardType(string tabname)
         {
-            this.Add(new CardCategory {
-                CategoryName = tabname,
-                Cards = new ObservableCollection<dynamic>(),
-                SelectedCards = new ObservableCollection<dynamic>()
-            });
+            CardCategory tab = null;
+            foreach (var category in this) { if (category.CategoryName == tabname) { tab = category; } }
+            if (tab == null)
+            {
+                this.Add(new CardCategory
+                {
+                    CategoryName = tabname,
+                    Cards = new ObservableCollection<dynamic>(),
+                    SelectedCards = new ObservableCollection<dynamic>()
+                });
+            }
+            else
+            {
+                tab.Cards.Clear();
+                tab.OriginalCards.Clear();
+            }
         }
 
         public void AddCardToTab(dynamic card, string tabname)
@@ -66,41 +77,6 @@ namespace FCGCardCreator
 
         public void ParseFromExcel(string filename)
         {
-            /*
-            FileInfo file = new FileInfo(filename);
-            using (ExcelPackage xlPackage = new ExcelPackage(file))
-            {
-                var workbook = xlPackage.Workbook;
-                foreach(var sheet in workbook.Worksheets)
-                {
-                    var lastcell = sheet.Dimension.End;
-                    var cols = lastcell.Column;
-                    var rows = lastcell.Row;
-
-                    string[] headers = new string[cols];
-                    for (var i = 0; i < cols; i++)
-                    {
-                        headers[i] = sheet.GetValue<string>(0, i);
-                        headers[i] = headers[i].Replace(" ", "");
-                    }
-                    var tabname = sheet.Name;
-                    this.AddCardType(tabname);
-
-                    for (var row = 1; row < rows; row++)
-                    {
-                        dynamic card = new ExpandoObject();
-                        IDictionary<String, Object> carddict = (IDictionary<String, Object>)card;
-                        for (var col = 1; col < cols; col++)
-                        {
-                            var value = sheet.GetValue<string>(row, col);
-                            carddict.Add(headers[col], value);
-                        }
-                        this.AddCardToTab(tabname, card);
-                    }
-                }
-            }
-             */
-
             var reader = WorkbookFactory.GetExcel2007Reader(new StreamReader(filename).BaseStream);
             foreach (var sheetname in reader.Worksheets.EnumerateWorksheetNames())
             {
@@ -189,7 +165,7 @@ namespace FCGCardCreator
             var copy = CopyCard(card);
             if (transformfunction != null)
             {
-                transformfunction(copy);
+                transformfunction(copy, PythonFriendlyOptions);
             }
             Cards.Add(copy);
         }
@@ -234,6 +210,8 @@ namespace FCGCardCreator
                     option.Name = optioninfo.Key;
                     option.value = "";
 
+                    option.PropertyChanged += OptionUpdated;
+
                     this.Options.Add(option);
                     this.PythonFriendlyOptions.Add(option.Name, option.value);
                 }
@@ -242,23 +220,39 @@ namespace FCGCardCreator
             if (scope.ContainsVariable("Transform"))
             {
                 this.transformfunction = scope.GetVariable("Transform");
-                Cards.Clear();
-                foreach (var card in OriginalCards)
-                {
-                    var newcard = CopyCard(card);
-                    transformfunction(newcard, PythonFriendlyOptions);
-                    Cards.Add(newcard);
-                }
+                UpdateDerivedCards();
             }
         }
 
+        private void UpdateDerivedCards()
+        {
+            if (transformfunction == null) { return; }
+            Cards.Clear();
+            foreach (var card in OriginalCards)
+            {
+                var newcard = CopyCard(card);
+                transformfunction(newcard, PythonFriendlyOptions);
+                Cards.Add(newcard);
+            }
+        }
 
+        private void OptionUpdated(Object sender, PropertyChangedEventArgs args)
+        {
+            BaseCardOption option = (BaseCardOption)sender;
+            PythonFriendlyOptions[option.Name] = option.Value;
+            UpdateDerivedCards();
+        }
     }
 
-    abstract public class BaseCardOption
+    abstract public class BaseCardOption : INotifyPropertyChanged
     {
         public string Name { get; set; }
         public string value;
+        public string Value { get { return value; } set { this.value = value; notify("Value"); } }
+
+        private void notify(string prop) { if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
     public class StringCardOption : BaseCardOption { }
     public class FileCardOption : BaseCardOption { }

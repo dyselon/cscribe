@@ -32,6 +32,7 @@ Close-able/reload-able tabs?
 Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
 What happens when you import data more than once?
 Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
+Fix UI Stretching with long filenames in category config
 
 REFACTOR
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't

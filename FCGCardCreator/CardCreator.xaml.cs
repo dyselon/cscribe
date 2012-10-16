@@ -294,5 +294,30 @@ namespace FCGCardCreator
             }
             return null;
         }
+
+        private void ScriptOptionFolderBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var thisbutton = (Button)sender;
+            var option = (BaseCardOption)thisbutton.DataContext;
+            var folderbox = new System.Windows.Forms.FolderBrowserDialog();
+            var result = folderbox.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                option.Value = folderbox.SelectedPath;
+            }
+        }
+
+        private void ScriptOptionFileBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var thisbutton = (Button)sender;
+            var option = (BaseCardOption)thisbutton.DataContext;
+            var opendialog = new Microsoft.Win32.OpenFileDialog();
+            var result = opendialog.ShowDialog();
+
+            if (result == true)
+            {
+                option.Value = opendialog.FileName;
+            }
+        }
     }
 }
