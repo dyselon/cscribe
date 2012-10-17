@@ -33,9 +33,7 @@ namespace FCGCardCreator
             {
                 this.Add(new CardCategory
                 {
-                    CategoryName = tabname,
-                    Cards = new ObservableCollection<dynamic>(),
-                    SelectedCards = new ObservableCollection<dynamic>()
+                    CategoryName = tabname
                 });
             }
             else
@@ -98,7 +96,26 @@ namespace FCGCardCreator
                     for (uint col = 0; col <= sheet.LastCol; col++)
                     {
                         var value = irow.GetCell(col).GetFormattedValue();
-                        carddict.Add(headers[col], value);
+                        double float_val;
+                        if (Double.TryParse(value, out float_val))  
+                        {                                           
+                            // If we're a number, make sure we're represented appropriately.
+                            // We do this, because GetFormattedValue returns ints as "1.0", which
+                            // required a bunch of dumb parsing code in templates. It's hacky,
+                            // sure, but it works pretty well for now.
+                            if (float_val == Math.Floor(float_val))
+                            {
+                                carddict.Add(headers[col], String.Format("{0}", (int)float_val));
+                            }
+                            else
+                            {
+                                carddict.Add(headers[col], String.Format("{0}", float_val));
+                            }
+                        }
+                        else
+                        {
+                            carddict.Add(headers[col], value);
+                        }
                     }
                     this.AddCardToTab(card, sheetname);
                 }
@@ -231,7 +248,36 @@ namespace FCGCardCreator
             foreach (var card in OriginalCards)
             {
                 var newcard = CopyCard(card);
-                transformfunction(newcard, PythonFriendlyOptions);
+                try
+                {
+                    transformfunction(newcard, PythonFriendlyOptions);
+                }
+                catch(Exception ex)
+                {
+                    Microsoft.Scripting.Interpreter.InterpretedFrameInfo[] pystacktrace = null;
+                    var carddict = (IDictionary<string, object>)card;
+                    var cardname = (carddict.ContainsKey("Name")) ? carddict["Name"] : "[[Unknown]]";
+                    foreach (System.Collections.DictionaryEntry pair in ex.Data)
+                    {
+                        pystacktrace = pair.Value as Microsoft.Scripting.Interpreter.InterpretedFrameInfo[];
+                        break;
+                    }
+                    if (pystacktrace != null)
+                    {
+                        var trace = new StringBuilder();
+                        trace.Append("Error in python:\n\n");
+                        foreach(var line in pystacktrace)
+                        {
+                            trace.AppendFormat("{0}\n", line.ToString());
+                        }
+                        MessageBox.Show(String.Format("Error transforming card {0}\n\n{1}", cardname, trace.ToString()));
+                    }
+                    else
+                    {
+                        MessageBox.Show(String.Format("Error transforming card {0}\n\n{1}", cardname, ex.ToString()));
+                    }
+
+                }
                 Cards.Add(newcard);
             }
         }

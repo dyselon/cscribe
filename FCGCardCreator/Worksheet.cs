@@ -36,7 +36,8 @@ namespace FCGCardCreator
 
         public string GetString(uint x, uint y)
         {
-            return this[x, y].Value as string;
+            var val = this[x, y].Value;
+            return (val == null) ? "" : val.ToString();
         }
 
         public int? GetInt(uint x, uint y)

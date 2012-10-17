@@ -24,13 +24,13 @@ namespace FCGCardCreator
     {
         private SpreadsheetsService service;
         private MainWindow host;
+        public SpreadsheetEntry SelectedValue { get; private set; }
 
-        public DocumentList(SpreadsheetsService service, MainWindow mainform)
+        public DocumentList(SpreadsheetsService service)
         {
             InitializeComponent();
 
             this.service = service;
-            this.host = mainform;
 
             SpreadsheetQuery query = new SpreadsheetQuery();
             SpreadsheetFeed feed = service.Query(query);
@@ -48,6 +48,7 @@ namespace FCGCardCreator
         // Cancel
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = false;
             this.Close();
         }
 
@@ -55,93 +56,11 @@ namespace FCGCardCreator
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             ListBoxItem selected = Documents.SelectedItem as ListBoxItem;
-            if (selected == null) { return; }
-            SpreadsheetEntry sheetentry = selected.Tag as SpreadsheetEntry;
-
-            var set = host.Tabs.DataContext as CardSet;
-            set.ParseFromGoogle(sheetentry, service);
+            SelectedValue = selected.Tag as SpreadsheetEntry;
+            this.DialogResult = true;
+            if (SelectedValue == null) { this.DialogResult = false; }
 
             this.Close();
         }
-
-        /*
-        List<DataTypes.HeroData> ParseHeroes(Worksheet herosheet)
-        {
-            List<DataTypes.HeroData> heroes = new List<DataTypes.HeroData>((int)herosheet.Rows);
-            for (uint i = 1; i < herosheet.Rows; i++)
-            {
-                DataTypes.HeroData hero = new DataTypes.HeroData();
-                hero.Name = herosheet.GetString(i, 0);
-                hero.Subtitle = herosheet.GetString(i, 1);
-                hero.Race = ParseRace(herosheet.GetString(i, 2));
-                hero.Class = (DataTypes.Class)Enum.Parse(typeof(DataTypes.Class), herosheet.GetString(i, 3));
-                hero.HP = (int)herosheet.GetInt(i, 6);
-                hero.Skills = new DataTypes.SkillRating[3];
-                hero.Skills[0] = new DataTypes.SkillRating();
-                hero.Skills[0].Skill = ParseSkillType(herosheet.GetString(i, 7));
-                hero.Skills[0].Progression = (DataTypes.Progression)herosheet.GetInt(i, 8);
-                hero.Skills[1] = new DataTypes.SkillRating();
-                hero.Skills[1].Skill = ParseSkillType(herosheet.GetString(i, 9));
-                hero.Skills[1].Progression = (DataTypes.Progression)herosheet.GetInt(i, 10);
-                hero.Skills[2] = new DataTypes.SkillRating();
-                hero.Skills[2].Skill = ParseSkillType(herosheet.GetString(i, 11));
-                hero.Skills[2].Progression = (DataTypes.Progression)herosheet.GetInt(i, 12);
-                var ability = new DataTypes.Ability();
-                ability.Name = herosheet.GetString(i, 13);
-                ability.Text = herosheet.GetString(i, 14);
-                hero.Ability = ability;
-                
-                hero.Count = 1; // Heroes are always one of a kind
-
-                heroes.Add(hero);
-            }
-            
-            return heroes;
-        }
-
-        private DataTypes.Skill ParseSkillType(string skilltype)
-        {
-            switch (skilltype)
-            {
-                case "F":
-                    return DataTypes.Skill.Fighting;
-                case "Ma":
-                    return DataTypes.Skill.Magic;
-                case "D":
-                    return DataTypes.Skill.Divinity;
-                case "Sn":
-                    return DataTypes.Skill.Sneaking;
-                case "A":
-                    return DataTypes.Skill.Athletics;
-                case "Sm":
-                    return DataTypes.Skill.Knowledge;
-                case "T":
-                    return DataTypes.Skill.Diplomacy;
-                case "Su":
-                    return DataTypes.Skill.Survival;
-                default:
-                    throw new Exception("Huh?");
-            }
-        }
-
-        private DataTypes.Race ParseRace(string race)
-        {
-            switch (race)
-            {
-                case "Human":
-                    return DataTypes.Race.Human;
-                case "Elf":
-                    return DataTypes.Race.Elf;
-                case "Dwarf":
-                    return DataTypes.Race.Dwarf;
-                case "Gnome":
-                    return DataTypes.Race.Gnome;
-                case "Half-Orc":
-                case "HalfOrc":
-                    return DataTypes.Race.HalfOrc;
-                default:
-                    throw new Exception("Wha?");
-            }
-        }*/
     }
 }

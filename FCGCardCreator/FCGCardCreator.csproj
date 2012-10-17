@@ -125,7 +125,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ImportWindow.xaml">
+    <Page Include="LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -138,8 +138,8 @@
     <Compile Include="DocumentList.xaml.cs">
       <DependentUpon>DocumentList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImportWindow.xaml.cs">
-      <DependentUpon>ImportWindow.xaml</DependentUpon>
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

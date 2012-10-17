@@ -16,14 +16,6 @@ CLEANUP EXPORTING
 Directory selection for saving out images
 Images should be named inteligently. Prompt for prefix?
 
-PYTHON CLEANUP
-Figure out solution for images directory
-Graceful reporting of python errors
-Document additional variables accessible from python
-Python can add new controls to cardUI (that get added/removed correctly on card switch?), or will fancytext do it?
-Reloading python should re-operate on source data... Keep a copy somewhere?
-Right dock property grid?
-
 OTHER USABILITY
 Reloading .xaml should actually work.
 Try to pull logic out from main window (sort of done)
@@ -35,7 +27,7 @@ Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matt
 Fix UI Stretching with long filenames in category config
 
 REFACTOR
-Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't
+Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't. Also, why does Worksheet exist, when Excel doesn't use it? Should it?
 
 FEATURE WISHLIST
 Export to OCTGN?

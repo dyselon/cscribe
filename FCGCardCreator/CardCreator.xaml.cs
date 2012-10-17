@@ -17,6 +17,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Dynamic;
 
+using Google.GData.Spreadsheets;
+
 namespace FCGCardCreator
 {
     /// <summary>
@@ -24,12 +26,13 @@ namespace FCGCardCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<CardCategory> tabdata = new ObservableCollection<CardCategory>();
+        private CardSet data = new CardSet();
+        private SpreadsheetsService google = null;
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new CardSet();
+            DataContext = data;
 
             /*
             AddTab("Heroes");
@@ -43,10 +46,31 @@ namespace FCGCardCreator
              */
         }
 
+        private SpreadsheetsService getGoogle()
+        {
+            if (google != null) { return google; }
+            LoginWindow window = new LoginWindow();
+            var result = window.ShowDialog();
+            if (result != null && result == true)
+            {
+                google = window.Service;
+                return google;
+            }
+            return null;
+        }
+
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            ImportWindow window = new ImportWindow(this);
-            window.ShowDialog();
+            var service = getGoogle();
+            if (service == null) { return; }
+
+            var doclist = new DocumentList(service);
+            var result = doclist.ShowDialog();
+            if (result != null && result == true)
+            {
+                var entry = doclist.SelectedValue;
+                data.ParseFromGoogle(entry, service);
+            }
         }
 
         private void ImportExcelButton_Click(object sender, RoutedEventArgs e)
@@ -59,8 +83,7 @@ namespace FCGCardCreator
 
             if (result == true)
             {
-                CardSet set = DataContext as CardSet;
-                set.ParseFromExcel(opendialog.FileName);
+                data.ParseFromExcel(opendialog.FileName);
             }
         }
 
