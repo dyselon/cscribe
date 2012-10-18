@@ -44,18 +44,27 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="10,10"/>
-                    <Setter Property="Padding" Value="10,2"/>
-                </Style>
-            </StackPanel.Resources>
-            <Button x:Name="ImportButton" Content="Import (Google)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ImportButton_Click"/>
-            <Button x:Name="ImportExcelButton" Content="Import (.xlsx)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ImportExcelButton_Click"/>
-            <Button x:Name="ExportSelected" Content="Export Selected..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Click="ExportSelected_Click"/>
-            <Button x:Name="PrintSelected" Content="Print Selected..." Click="PrintSelected_Click"></Button>
-        </StackPanel>
+        <Menu IsMainMenu="True">
+            <MenuItem Header="Project">
+                <MenuItem Header="New Project" Click="NewProject_Click"/>
+                <MenuItem Header="Open Project..." Click="OpenProject_Click"/>
+                <MenuItem Header="Save Project As..." Click="SaveProjectAs_Click"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Data">
+                <MenuItem Header="Import (Google)" Click="ImportButton_Click"/>
+                <MenuItem Header="Import (Excel)" Click="ImportExcelButton_Click"/>
+            </MenuItem>
+            <MenuItem Header="Export">
+                <MenuItem Header="Export Selected..."/>
+                <MenuItem Header="Export All..."/>
+            </MenuItem>
+            <MenuItem Header="Print">
+                <MenuItem Header="Print Selected..."/>
+                <MenuItem Header="Print All..."/>
+            </MenuItem>
+        </Menu>
         <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs" SelectionChanged="Tabs_SelectionChanged">
             <TabControl.ItemTemplate>
                 <DataTemplate>

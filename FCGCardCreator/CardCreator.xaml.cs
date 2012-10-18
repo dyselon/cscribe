@@ -69,7 +69,7 @@ namespace FCGCardCreator
             if (result != null && result == true)
             {
                 var entry = doclist.SelectedValue;
-                data.ParseFromGoogle(entry, service);
+                data.ParseFromGoogle(entry.Worksheets, entry.SelfUri.Content, service);
             }
         }
 
@@ -91,10 +91,13 @@ namespace FCGCardCreator
         {
             ListBox box = (ListBox)sender;
             CardCategory category = (CardCategory)box.DataContext;
-            category.SelectedCards.Clear();
-            foreach (dynamic card in box.SelectedItems)
+            if (category != null)
             {
-                category.SelectedCards.Add(card);
+                category.SelectedCards.Clear();
+                foreach (dynamic card in box.SelectedItems)
+                {
+                    category.SelectedCards.Add(card);
+                }
             }
         }
 
@@ -122,14 +125,16 @@ namespace FCGCardCreator
         {
             TextBox thisbox = (TextBox)sender;
             CardCategory category = thisbox.DataContext as CardCategory;
-            category.XamlTemplateFilename = thisbox.Text;
-            category.CardUI = LoadXaml(thisbox.Text);
+            if (category != null)
+            {
+                category.XamlTemplateFilename = thisbox.Text;
 
-            if (category.CardUI == null) { return; }
+                if (category.CardUI == null) { return; }
 
-            var parent = thisbox.TemplatedParent as ContentPresenter;
-            var cardcontainer = parent.ContentTemplate.FindName("CardContainer", parent) as Border;
-            cardcontainer.Child = category.CardUI;
+                var parent = thisbox.TemplatedParent as ContentPresenter;
+                var cardcontainer = parent.ContentTemplate.FindName("CardContainer", parent) as Border;
+                cardcontainer.Child = category.CardUI;
+            }
         }
 
         private void BrowsePython(object sender, RoutedEventArgs e)
@@ -161,21 +166,9 @@ namespace FCGCardCreator
             Export(category.SelectedCards, category.XamlTemplateFilename);
         }
 
-        private FrameworkElement LoadXaml(string filename)
-        {
-            if (!File.Exists(filename))
-            {
-                return null;
-            }
-            var stream = new StreamReader(filename);
-            var context = new ParserContext {
-                BaseUri = new Uri(System.IO.Path.GetDirectoryName(filename) + "\\", UriKind.Absolute)
-            };
-            return XamlReader.Load(stream.BaseStream, context) as FrameworkElement;
-        }
-
         private void Export(IList<dynamic> cards, string templatefilename)
         {
+            /* Temporarily disabled while I figure out projects.
             var cardui = LoadXaml(templatefilename);
             //cardui.BeginInit();
             //cardui.EndInit();
@@ -202,6 +195,7 @@ namespace FCGCardCreator
                     encoder.Save(outfile);
                 }
             }
+            */
         }
 
         private void PrintSelected_Click(object sender, RoutedEventArgs e)
@@ -243,7 +237,7 @@ namespace FCGCardCreator
                 }
                 for (var i = 0; i < cardcount; i++)
                 {
-                    var cardui = LoadXaml(filename);
+                    var cardui = tabitem.LoadXaml();
                     cardui.Margin = new Thickness(10);
                     cardui.Measure(new Size(cardui.Width, cardui.Height));
                     cardui.Arrange(new Rect(0, 0, cardui.Width, cardui.Height));
@@ -340,6 +334,49 @@ namespace FCGCardCreator
             if (result == true)
             {
                 option.Value = opendialog.FileName;
+            }
+        }
+
+        private void NewProject_Click(object sender, RoutedEventArgs e)
+        {
+            data.Clear();
+        }
+
+        private void OpenProject_Click(object sender, RoutedEventArgs e)
+        {
+            var opendialog = new Microsoft.Win32.OpenFileDialog();
+            opendialog.DefaultExt = ".cset";
+            opendialog.Filter = "Card sets (.cset)|*.cset";
+            var result = opendialog.ShowDialog();
+
+            if (result == true)
+            {
+                data = CardSet.ReadFromFile(opendialog.FileName);
+                DataContext = data;
+
+                if (data.SourceType == CardSet.CardDataSource.Google)
+                {
+                    var service = getGoogle();
+                    if (service == null) { return; }
+                    data.Refresh(service);
+                }
+                else
+                {
+                    data.Refresh(null);
+                }
+            }
+        }
+
+        private void SaveProjectAs_Click(object sender, RoutedEventArgs e)
+        {
+            var savedialog = new Microsoft.Win32.SaveFileDialog();
+            savedialog.DefaultExt = ".cset";
+            savedialog.Filter = "Card sets (.cset)|*.cset";
+            var result = savedialog.ShowDialog();
+
+            if (result == true)
+            {
+                data.WriteToFile(savedialog.FileName);
             }
         }
     }

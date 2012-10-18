@@ -51,10 +51,9 @@ namespace FCGCardCreator
             tab.Add(card);
         }
 
-        public void ParseFromGoogle(SpreadsheetEntry workbook, SpreadsheetsService service)
+        public void ParseFromGoogle(WorksheetFeed worksheetfeed, string uri, SpreadsheetsService service)
         {
             // Get list of worksheets
-            WorksheetFeed worksheetfeed = workbook.Worksheets;
             foreach (WorksheetEntry worksheetentry in worksheetfeed.Entries)
             {
                 Worksheet worksheet = GoogleWorksheetReader.Read(worksheetentry, service);
@@ -74,7 +73,7 @@ namespace FCGCardCreator
                 }
             }
             SourceType = CardDataSource.Google;
-            DataLocation = workbook.SelfUri.Content;
+            DataLocation = uri;
         }
 
         public void ParseFromExcel(string filename)
@@ -130,7 +129,10 @@ namespace FCGCardCreator
 
         public void WriteToFile(string filename)
         {
-            Write(new StreamWriter(File.OpenWrite(filename), Encoding.UTF8));
+            using (StreamWriter writer = new StreamWriter(File.OpenWrite(filename), Encoding.UTF8))
+            {
+                Write(writer);
+            }
         }
 
         public void Write(StreamWriter writer)
@@ -151,7 +153,10 @@ namespace FCGCardCreator
 
         public static CardSet ReadFromFile(string filename)
         {
-            return Read(new StreamReader(File.Open(filename, FileMode.Open), Encoding.UTF8));
+            using (StreamReader reader = new StreamReader(File.Open(filename, FileMode.Open), Encoding.UTF8))
+            {
+                return Read(reader);
+            }
         }
 
         public static CardSet Read(StreamReader reader)
@@ -167,12 +172,25 @@ namespace FCGCardCreator
             int categorycount = Int32.Parse(reader.ReadLine());
             for (int i = 0; i < categorycount; i++)
             {
-                CardCategory.Read(reader);
+                var cat = CardCategory.Read(reader);
+                set.Add(cat);
             }
 
-            // Refresh data?
-
             return set;
+        }
+
+        public void Refresh(SpreadsheetsService service)
+        {
+            switch (SourceType)
+            {
+                case CardDataSource.Excel: ParseFromExcel(DataLocation); break;
+                case CardDataSource.Google:
+                    var sheetquery = new WorksheetQuery(DataLocation);
+                    var query = service.Query(sheetquery);
+                    ParseFromGoogle(query, DataLocation, service);
+                    break;
+            }
+
         }
     }
 
@@ -191,7 +209,7 @@ namespace FCGCardCreator
         public string CategoryName { get { return categoryname; } set { categoryname = value; notify("CategoryName"); } }
         
         private string xamlfile;
-        public string XamlTemplateFilename { get { return xamlfile; } set { xamlfile = value; notify("XamlTemplateFilename"); } }
+        public string XamlTemplateFilename { get { return xamlfile; } set { xamlfile = value; CardUI = LoadXaml(); notify("XamlTemplateFilename"); } }
         public FrameworkElement CardUI { get; set; }
 
         private string pythonfile;
@@ -238,6 +256,21 @@ namespace FCGCardCreator
                 transformfunction(copy, PythonFriendlyOptions);
             }
             Cards.Add(copy);
+        }
+
+        public FrameworkElement LoadXaml()
+        {
+            var filename = XamlTemplateFilename;
+            if (!File.Exists(filename))
+            {
+                return null;
+            }
+            var stream = new StreamReader(filename);
+            var context = new System.Windows.Markup.ParserContext
+            {
+                BaseUri = new Uri(System.IO.Path.GetDirectoryName(filename) + "\\", UriKind.Absolute)
+            };
+            return System.Windows.Markup.XamlReader.Load(stream.BaseStream, context) as FrameworkElement;
         }
 
         public void UpdatePython()
@@ -370,7 +403,7 @@ namespace FCGCardCreator
             }
         }
 
-        internal static void Read(StreamReader reader)
+        internal static CardCategory Read(StreamReader reader)
         {
             var cat = new CardCategory();
             cat.CategoryName = reader.ReadLine();
@@ -384,6 +417,7 @@ namespace FCGCardCreator
                 var opt = cat.FindOption(reader.ReadLine());
                 if (opt != null) { opt.Value = reader.ReadLine(); }
             }
+            return cat;
         }
     }
 
