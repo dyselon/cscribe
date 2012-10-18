@@ -25,22 +25,24 @@ namespace FCGCardCreator
 {
     class CardSet : ObservableCollection<CardCategory>
     {
-        public void AddCardType(string tabname)
+        public enum CardDataSource { None, Google, Excel }
+        public CardDataSource SourceType = CardDataSource.None;
+        public String DataLocation;
+        public CardCategory AddCardType(string tabname)
         {
             CardCategory tab = null;
             foreach (var category in this) { if (category.CategoryName == tabname) { tab = category; } }
             if (tab == null)
             {
-                this.Add(new CardCategory
-                {
-                    CategoryName = tabname
-                });
+                tab = new CardCategory { CategoryName = tabname };
+                this.Add(tab);
             }
             else
             {
                 tab.Cards.Clear();
                 tab.OriginalCards.Clear();
             }
+            return tab;
         }
 
         public void AddCardToTab(dynamic card, string tabname)
@@ -71,6 +73,8 @@ namespace FCGCardCreator
                     this.AddCardToTab(card, worksheet.Title);
                 }
             }
+            SourceType = CardDataSource.Google;
+            DataLocation = workbook.SelfUri.Content;
         }
 
         public void ParseFromExcel(string filename)
@@ -120,6 +124,55 @@ namespace FCGCardCreator
                     this.AddCardToTab(card, sheetname);
                 }
             }
+            SourceType = CardDataSource.Excel;
+            DataLocation = filename;
+        }
+
+        public void WriteToFile(string filename)
+        {
+            Write(new StreamWriter(File.OpenWrite(filename), Encoding.UTF8));
+        }
+
+        public void Write(StreamWriter writer)
+        {
+            switch (SourceType)
+            {
+                case CardDataSource.None: writer.WriteLine("None"); break;
+                case CardDataSource.Google: writer.WriteLine("Google"); writer.WriteLine(DataLocation); break;
+                case CardDataSource.Excel: writer.WriteLine("Excel"); writer.WriteLine(DataLocation); break;
+            }
+
+            writer.WriteLine(this.Count);
+            foreach (var cat in this)
+            {
+                cat.Write(writer);
+            }
+        }
+
+        public static CardSet ReadFromFile(string filename)
+        {
+            return Read(new StreamReader(File.Open(filename, FileMode.Open), Encoding.UTF8));
+        }
+
+        public static CardSet Read(StreamReader reader)
+        {
+            var set = new CardSet();
+            var sourcetypestring = reader.ReadLine();
+            switch (sourcetypestring)
+            {
+                case "None": set.SourceType = CardDataSource.None; break;
+                case "Google": set.SourceType = CardDataSource.Google; set.DataLocation = reader.ReadLine(); break;
+                case "Excel": set.SourceType = CardDataSource.Excel; set.DataLocation = reader.ReadLine(); break;
+            }
+            int categorycount = Int32.Parse(reader.ReadLine());
+            for (int i = 0; i < categorycount; i++)
+            {
+                CardCategory.Read(reader);
+            }
+
+            // Refresh data?
+
+            return set;
         }
     }
 
@@ -241,6 +294,18 @@ namespace FCGCardCreator
             }
         }
 
+        private BaseCardOption FindOption(string optname)
+        {
+            try
+            {
+                return Options.Single<BaseCardOption>(opt => opt.Name == optname);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private void UpdateDerivedCards()
         {
             if (transformfunction == null) { return; }
@@ -287,6 +352,38 @@ namespace FCGCardCreator
             BaseCardOption option = (BaseCardOption)sender;
             PythonFriendlyOptions[option.Name] = option.Value;
             UpdateDerivedCards();
+        }
+
+        internal void Write(StreamWriter writer)
+        {
+            writer.WriteLine(CategoryName);
+
+            writer.WriteLine(XamlTemplateFilename);
+            writer.WriteLine(PythonFilename);
+
+            writer.WriteLine(Options.Count);
+
+            foreach (var option in Options)
+            {
+                writer.WriteLine(option.Name);
+                writer.WriteLine(option.Value);
+            }
+        }
+
+        internal static void Read(StreamReader reader)
+        {
+            var cat = new CardCategory();
+            cat.CategoryName = reader.ReadLine();
+
+            cat.XamlTemplateFilename = reader.ReadLine();
+            cat.PythonFilename = reader.ReadLine();
+
+            var optioncount = Int32.Parse(reader.ReadLine());
+            for (int i = 0; i < optioncount; i++)
+            {
+                var opt = cat.FindOption(reader.ReadLine());
+                if (opt != null) { opt.Value = reader.ReadLine(); }
+            }
         }
     }
 

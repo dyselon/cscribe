@@ -26,9 +26,13 @@ What happens when you import data more than once?
 Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
 Fix UI Stretching with long filenames in category config
 
+BUGS AND PENDING GOTCHAS
+- Serializing options w/ line breaks...
+
 REFACTOR
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't. Also, why does Worksheet exist, when Excel doesn't use it? Should it?
 
 FEATURE WISHLIST
 Export to OCTGN?
 .csv import?
+Import from google drive .gsheet files
