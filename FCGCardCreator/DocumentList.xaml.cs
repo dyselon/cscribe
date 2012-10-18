@@ -23,7 +23,6 @@ namespace FCGCardCreator
     public partial class DocumentList : Window
     {
         private SpreadsheetsService service;
-        private MainWindow host;
         public SpreadsheetEntry SelectedValue { get; private set; }
 
         public DocumentList(SpreadsheetsService service)
