@@ -4,30 +4,20 @@ FIX PRINTING
 - try and remove extra print dialog
 - Print All
 
-PROJECT SETTINGS
-- Remember data source. Be able to refresh data from that source.
-- Remember tabs, as well as per-tab options, including:
-  - .xaml layout
-  - python script
-  - python options
-  - printing options
-
 CLEANUP EXPORTING
 Directory selection for saving out images
 Images should be named inteligently. Prompt for prefix?
 
 OTHER USABILITY
-Reloading .xaml should actually work.
-Try to pull logic out from main window (sort of done)
-Config tab? Can automate applying python, setup image dictionaries? Project files, maybe?
-Close-able/reload-able tabs?
-Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
-What happens when you import data more than once?
-Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
-Fix UI Stretching with long filenames in category config
+- Try to pull logic out from main window (sort of done)
+- Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
+- Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
+- Fix UI Stretching with long filenames in category config
+- .py - Switch Options from dict -> array of tuples
 
 BUGS AND PENDING GOTCHAS
 - Serializing options w/ line breaks...
+- Fix UI Stretching with long filenames in category config
 
 REFACTOR
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't. Also, why does Worksheet exist, when Excel doesn't use it? Should it?
