@@ -1,7 +1,9 @@
 CSCRIBE
 =======
-*Templating software* - v0.2
-*NOTE - As of 0.2, exporting images and printing are temporarily disabled.*
+**Templating software** - v0.2
+
+**NOTE - As of 0.2, exporting images and printing are temporarily disabled.**
+
 I know, I know, those are the two main functions of the program. WIP software, y'all.
 
 WHAT IS IT?
