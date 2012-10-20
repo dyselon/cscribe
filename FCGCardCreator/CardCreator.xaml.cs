@@ -33,17 +33,6 @@ namespace FCGCardCreator
         {
             InitializeComponent();
             DataContext = data;
-
-            /*
-            AddTab("Heroes");
-            dynamic card1 = new ExpandoObject();
-            card1.Name = "Jack Hammer"; card1.Subtitle = "Woo!"; card1.Count = "5";
-            AddCardToTab(card1, "Heroes");
-            dynamic card2 = new ExpandoObject();
-            card2.Name = "Joe Schmo"; card2.Subtitle = "Rawr!"; card2.Count = "6";
-            AddCardToTab(card2, "Heroes");
-            AddTab("Dicks");
-             */
         }
 
         private SpreadsheetsService getGoogle()
@@ -111,10 +100,6 @@ namespace FCGCardCreator
 
             if (result == true)
             {
-                /*Button thisbutton = (Button)sender;
-                var parent = thisbutton.TemplatedParent as ContentPresenter;
-                var filename = parent.ContentTemplate.FindName("FileName", parent) as TextBox;
-                filename.Text = opendialog.FileName;*/
                 Button thisbutton = (Button)sender;
                 CardCategory category = (CardCategory)thisbutton.DataContext;
                 category.XamlTemplateFilename = opendialog.FileName;
@@ -153,49 +138,9 @@ namespace FCGCardCreator
             }
         }
 
-        private void PythonFileName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void ExportSelected_Click(object sender, RoutedEventArgs e)
-        {
-            Button thisbutton = (Button)sender;
-
-            var category = Tabs.SelectedItem as CardCategory;
-            Export(category.SelectedCards, category.XamlTemplateFilename);
-        }
-
         private void Export(IList<dynamic> cards, string templatefilename)
         {
-            /* Temporarily disabled while I figure out projects.
-            var cardui = LoadXaml(templatefilename);
-            //cardui.BeginInit();
-            //cardui.EndInit();
-            //cardui.UpdateLayout();
-            cardui.Measure(new Size(cardui.Width, cardui.Height));
-            cardui.Arrange(new Rect(0, 0, cardui.Width, cardui.Height));
 
-            int count = 0;
-
-            foreach (var card in cards)
-            {
-                cardui.DataContext = card;
-                cardui.UpdateLayout();
-
-                count++;
-                var rendertarget = new RenderTargetBitmap((int)cardui.Width, (int)cardui.Height, 96.0f, 96.0f, PixelFormats.Default);
-                rendertarget.Render(cardui);
-
-                var encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(rendertarget));
-                string outputfilename = String.Format("hero{0:D3}.png", count);
-                using (var outfile = File.Open(outputfilename, FileMode.OpenOrCreate))
-                {
-                    encoder.Save(outfile);
-                }
-            }
-            */
         }
 
         private void PrintSelected_Click(object sender, RoutedEventArgs e)
@@ -378,6 +323,28 @@ namespace FCGCardCreator
             {
                 data.WriteToFile(savedialog.FileName);
             }
+        }
+
+        private void ExportSelected_Click(object sender, RoutedEventArgs e)
+        {
+            var options = new ExportSelectedOptions();
+            var category = Tabs.SelectedItem as CardCategory;
+            if (category == null) { return; }
+            var shortname = category.CategoryName.ToLowerInvariant().Replace(" ", "");
+            options.FilenamePrefix = shortname;
+            options.AttributeOptions = category.SharedAttributes;
+            if (category.SelectedCards.Count > 0) { options.ExampleCard = category.SelectedCards[0]; }
+
+            if (options.ShowDialog() == true)
+            {
+                string prefix = (options.FixedRadio.IsChecked == true) ? options.FilenamePrefix : (string)options.AttributeBox.SelectedValue;
+                category.Export(options.Location, prefix, (options.FixedRadio.IsChecked == true), category.SelectedCards);
+            }
+        }
+
+        private void ExportAll_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

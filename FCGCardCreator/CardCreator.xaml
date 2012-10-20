@@ -57,8 +57,8 @@
                 <MenuItem Header="Import (Excel)" Click="ImportExcelButton_Click"/>
             </MenuItem>
             <MenuItem Header="Export">
-                <MenuItem Header="Export Selected..."/>
-                <MenuItem Header="Export All..."/>
+                <MenuItem Header="Export Selected..." Click="ExportSelected_Click"/>
+                <MenuItem Header="Export All..." Click="ExportAll_Click"/>
             </MenuItem>
             <MenuItem Header="Print">
                 <MenuItem Header="Print Selected..."/>
@@ -92,7 +92,7 @@
                             <TextBox Grid.Row="1" x:Name="FileName" Grid.Column="0" Text="{Binding XamlTemplateFilename}" TextChanged="FileName_TextChanged"/>
                             <Button Grid.Row="1" x:Name="BrowseButton" Grid.Column="1" Margin="10,0" Padding="10,0" Click="BrowseTemplate">Browse...</Button>
                             <Label Grid.Row="2">Script</Label>
-                            <TextBox Grid.Row="3" x:Name="PythonFileName" Grid.Column="0" Text="{Binding PythonFilename}" TextChanged="PythonFileName_TextChanged"/>
+                            <TextBox Grid.Row="3" x:Name="PythonFileName" Grid.Column="0" Text="{Binding PythonFilename}"/>
                             <Button Grid.Row="3" x:Name="PythonBrowse" Grid.Column="1" Margin="10,0" Padding="10,0" Click="BrowsePython">Browse...</Button>
                             <Label Grid.Row="4">Script Options</Label>
                             <ItemsControl Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Options}">

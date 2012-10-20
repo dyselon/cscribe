@@ -2,7 +2,7 @@ CSCRIBE
 =======
 **Templating software** - v0.2
 
-**NOTE - As of 0.2, exporting images and printing are temporarily disabled.**
+**NOTE - As of right now, printing is temporarily disabled. Export All also doesn't work. Export Selected does.**
 
 I know, I know, those are the two main functions of the program. WIP software, y'all.
 

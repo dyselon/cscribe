@@ -20,6 +20,7 @@ using Net.SourceForge.Koogra;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.Scripting.Hosting;
+using System.Windows.Media.Imaging;
 
 namespace FCGCardCreator
 {
@@ -418,6 +419,58 @@ namespace FCGCardCreator
                 if (opt != null) { opt.Value = reader.ReadLine(); }
             }
             return cat;
+        }
+
+        public void Export(string location, string prefix, bool fixedprefix, IEnumerable<dynamic> cards)
+        {
+            var cardui = LoadXaml();
+            cardui.Measure(new Size(cardui.Width, cardui.Height));
+            cardui.Arrange(new Rect(0, 0, cardui.Width, cardui.Height));
+
+            int count = 0;
+
+            foreach (var card in cards)
+            {
+                cardui.DataContext = card;
+                cardui.UpdateLayout();
+
+                count++;
+                var rendertarget = new RenderTargetBitmap((int)cardui.Width, (int)cardui.Height, 96.0f, 96.0f, System.Windows.Media.PixelFormats.Default);
+                rendertarget.Render(cardui);
+
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(rendertarget));
+                string outputfilename = (fixedprefix) ?
+                    String.Format("{0}\\{1}{2:D3}.png", location, prefix, count) :
+                    String.Format("{0}\\{1}.png", location, ((IDictionary<string, object>)card)[prefix]);
+                using (var outfile = File.Open(outputfilename, FileMode.OpenOrCreate))
+                {
+                    encoder.Save(outfile);
+                }
+            }
+        }
+
+        public IEnumerable<string> SharedAttributes
+        {
+            get {
+                IEnumerable<string> attributes = null;
+                foreach (var card in Cards)
+                {
+                    var carddict = (IDictionary<string, object>)card;
+                    if (attributes == null)
+                    {
+                        var newattributes = new List<string>();
+                        foreach (var name in carddict.Keys) { newattributes.Add(name); }
+                        attributes = newattributes;
+                    }
+                    else
+                    {
+                        attributes = attributes.Intersect<string>(carddict.Keys);
+                    }
+                    //foreach (var name in carddict.Keys) { possibleattributes.Add(name); }
+                }
+                return attributes;
+            }
         }
     }
 

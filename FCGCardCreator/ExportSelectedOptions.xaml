@@ -1,0 +1,39 @@
+﻿<Window x:Class="FCGCardCreator.ExportSelectedOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ExportSelectedOptions" Height="175" Width="542">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Grid.Row="0" Grid.Column="1">Export Location</Label>
+        <TextBox Grid.Row="0" Grid.Column="2" Name="LocationTextbox" TextChanged="Text_Changed"/>
+        <Button Grid.Row="0" Grid.Column="3" Padding="10,0" Click="Browse_Click">Browse...</Button>
+
+        <RadioButton Grid.Row="1" Grid.Column="0" Name="FixedRadio" VerticalAlignment="Center" IsChecked="True" GroupName="NamingType" Checked="Checked_Changed"/>
+        <Label Grid.Row="1" Grid.Column="1">Fixed Prefix</Label>
+        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Name="FilenameTextbox" TextChanged="Text_Changed" IsEnabled="{Binding ElementName=FixedRadio, Path=IsChecked}"/>
+
+        <RadioButton Grid.Row="2" Grid.Column="0" Name="AttributeRadio" VerticalAlignment="Center" GroupName="NamingType" Checked="Checked_Changed"/>
+        <Label Grid.Row="2" Grid.Column="1">Card Attribute</Label>
+        <ComboBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Name="AttributeBox" IsEnabled="{Binding ElementName=AttributeRadio, Path=IsChecked}" SelectionChanged="Combo_Changed"/>
+        
+        <Label Grid.Row="3" Grid.Column="2" Name="FilenameExampleLabel">Filename Example: </Label>
+        
+        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+            <Button Margin="10,2" Padding="10,4" Click="Cancel_Click">Cancel</Button>
+            <Button Margin="0,2" Padding="10,4" Click="Export_Click">Export!</Button>
+        </StackPanel>
+    </Grid>
+</Window>
