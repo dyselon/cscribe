@@ -2,9 +2,9 @@ CSCRIBE
 =======
 **Templating software** - v0.2
 
-**NOTE - As of right now, printing is temporarily disabled. Export All also doesn't work. Export Selected does.**
+**NOTE - As of right now, printing is temporarily disabled.**
 
-I know, I know, those are the two main functions of the program. WIP software, y'all.
+I'll fix it as soon as possible. WIP software, y'all.
 
 WHAT IS IT?
 -----------
@@ -49,8 +49,11 @@ The controls I've found most useful to actually create .xaml files are Grid and 
 
 EXPORTING TO IMAGES
 -------------------
-*Disabled currently*
-To create images of your cards, select the cards you want to make images of (ctrl+a works to select everything on a tab), and hit the "Export Selected..." button. This will generate images in the program's directory. The cards will be named after the tab, and numbered sequentially (tab001.png, tab002.png, etc). This means it's pretty easy to overwrite your own images if you're only exporting a couple images at a time, and means you have to manually move files around a lot. I'll fix this in the future.
+The Export All option under the Export menu will create an image for every card in your set. If you only want images of certain cards, use the Export Selected option.
+
+Image filenames can either be sequentially numbered (card001.png, card002.png, etc) or each card image can be named after an attribute on the card.
+
+The images produced are always in .png format. More formats may be added in the future.
 
 PRINTING
 --------

@@ -1,0 +1,96 @@
+﻿<Window x:Class="FCGCardCreator.ExportAllOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:self="clr-namespace:FCGCardCreator"
+        Title="Export All Options" Height="379" Width="490">
+    <Grid>
+        <Grid.Resources>
+            <self:BoolToVis x:Key="visConverter"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Global Options -->
+        <Grid Grid.Row="0" Margin="5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">Export Location:</Label>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="LocationTextbox" TextChanged="Text_Changed" Margin="5,0"/>
+            <Button Grid.Row="1" Grid.Column="2" Padding="10,0" Click="Browse_Click">Browse...</Button>
+
+            <RadioButton Grid.Row="2" Grid.Column="0" Name="FixedRadio" GroupName="NameType" Checked="Radio_Changed" IsChecked="True" Margin="5,8,15,0">Fixed Prefix</RadioButton>
+            <RadioButton Grid.Row="3" Grid.Column="0" Name="AttributeRadio" GroupName="NameType" Checked="Radio_Changed" Margin="5,0,15,0">Card Attribute</RadioButton>
+
+            <CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="SubdirectoryCheck" Margin="5,0,0,0" Checked="Radio_Changed" Unchecked="Radio_Changed" HorizontalAlignment="Right">Place Each Tab In Separate Directory</CheckBox>
+        </Grid>
+
+        <!-- Category Options (Fixed) -->
+        <Grid Grid.Row="1" Visibility="{Binding ElementName=FixedRadio, Path=IsChecked, Converter={StaticResource visConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Category Prefixes:</Label>
+            <ItemsControl Grid.Row="1" Margin="15,0" ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="{Binding CategoryName}"/>
+                            <TextBox Grid.Column="1" Text="{Binding ExportName}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        
+        <!-- Category Options (Dynamic) -->
+        <Grid Grid.Row="1" Visibility="{Binding ElementName=AttributeRadio, Path=IsChecked, Converter={StaticResource visConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Category Prefixes:</Label>
+            <ItemsControl Grid.Row="1" Margin="15,0" ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="{Binding CategoryName}"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding SharedAttributes}" SelectedIndex="0" SelectionChanged="ExportAttribute_Changed"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <!-- Example Filename -->
+        <Label Grid.Row="2" Name="ExampleFilenameLabel">Example Filename: </Label>
+
+        <!-- Main Buttons -->
+        <StackPanel Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+            <Button Margin="10,2" Padding="10,4" Click="Cancel_Click">Cancel</Button>
+            <Button Margin="0,2" Padding="10,4" Click="Export_Click">Export!</Button>
+        </StackPanel>
+
+    </Grid>
+</Window>

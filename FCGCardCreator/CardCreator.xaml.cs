@@ -344,7 +344,24 @@ namespace FCGCardCreator
 
         private void ExportAll_Click(object sender, RoutedEventArgs e)
         {
+            var options = new ExportAllOptions();
+            options.DataContext = this.DataContext;
+            options.ShowDialog();
+        }
+    }
 
+    public class BoolToVis : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return ((bool)value) ?
+                Visibility.Visible :
+                Visibility.Hidden;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

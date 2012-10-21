@@ -207,7 +207,19 @@ namespace FCGCardCreator
         }
 
         private string categoryname;
-        public string CategoryName { get { return categoryname; } set { categoryname = value; notify("CategoryName"); } }
+        public string CategoryName { get { return categoryname; }
+            set { 
+                categoryname = value;
+                notify("CategoryName");
+                if (exportnameoverride == false) { exportname = value.ToLowerInvariant().Replace(" ", ""); notify("ExportName"); } // If we've never manually set the export name, update it to match our name.
+            }
+        }
+        private string exportname;
+        private bool exportnameoverride = false;
+        public string ExportName { get { return exportname; } set { exportname = value; exportnameoverride = true; notify("ExportName"); } }
+
+        private string exportattribute = "Name";
+        public string ExportAttribute { get { return exportattribute; } set { exportattribute = value; notify("ExportAttribute"); } }
         
         private string xamlfile;
         public string XamlTemplateFilename { get { return xamlfile; } set { xamlfile = value; CardUI = LoadXaml(); notify("XamlTemplateFilename"); } }

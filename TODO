@@ -5,8 +5,11 @@ FIX PRINTING
 - Print All
 
 CLEANUP EXPORTING
-Directory selection for saving out images
-Images should be named inteligently. Prompt for prefix?
+Project-save export names, export attributes
+Fix export selected to use category as datacontext/bind stuff appropriately
+ExportAll example filename should show correctly on window open
+Exports should have a default location.
+Exports location browse should also have a default location (and save the last location if possible)
 
 OTHER USABILITY
 - Try to pull logic out from main window (sort of done)
@@ -14,6 +17,7 @@ OTHER USABILITY
 - Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
 - Fix UI Stretching with long filenames in category config
 - .py - Switch Options from dict -> array of tuples
+- .py - Let python set display name, export name
 
 BUGS AND PENDING GOTCHAS
 - Serializing options w/ line breaks...

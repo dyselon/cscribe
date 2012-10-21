@@ -104,6 +104,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CardSet.cs" />
+    <Compile Include="ExportAllOptions.xaml.cs">
+      <DependentUpon>ExportAllOptions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExportSelectedOptions.xaml.cs">
       <DependentUpon>ExportSelectedOptions.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="DocumentList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExportAllOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

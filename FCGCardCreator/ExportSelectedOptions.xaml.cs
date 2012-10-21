@@ -54,7 +54,7 @@ namespace FCGCardCreator
         {
             FilenameExampleLabel.Content = (FixedRadio.IsChecked == true) ?
                 String.Format("Example Filename: {0}\\{1}{2}.png", Location, FilenamePrefix, "001") :
-                String.Format("{0}\\{1}.png", Location, ((IDictionary<string, object>)ExampleCard)[(string)AttributeBox.SelectedValue]);
+                String.Format("Example Filename: {0}\\{1}.png", Location, ((IDictionary<string, object>)ExampleCard)[(string)AttributeBox.SelectedValue]);
         }
 
         private void Export_Click(object sender, RoutedEventArgs e)
