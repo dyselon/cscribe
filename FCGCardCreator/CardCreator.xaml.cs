@@ -149,6 +149,7 @@ namespace FCGCardCreator
             if (printdialog.ShowDialog() != true) { return; }
             var doc = new FixedDocument();
             doc.DocumentPaginator.PageSize = new Size(printdialog.PrintableAreaWidth, printdialog.PrintableAreaHeight);
+
             // So, this super ugly bit forces 9 cards for landscape/8 for portrait.
             // Should dynamically figure this out from WrapPanel in the future.
             var maxcards = 9;
@@ -348,6 +349,13 @@ namespace FCGCardCreator
             options.DataContext = this.DataContext;
             options.ShowDialog();
         }
+
+        private void PrintAll_Click(object sender, RoutedEventArgs e)
+        {
+            var options = new PrintAllOptions();
+            options.DataContext = this.DataContext;
+            options.ShowDialog();
+        }
     }
 
     public class BoolToVis : IValueConverter
@@ -362,6 +370,22 @@ namespace FCGCardCreator
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class UIntToString : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return ((uint)value).ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            uint tryint = 0;
+            UInt32.TryParse((string)value, out tryint);
+            return tryint;
         }
     }
 }

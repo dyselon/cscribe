@@ -186,9 +186,9 @@ namespace FCGCardCreator
             {
                 case CardDataSource.Excel: ParseFromExcel(DataLocation); break;
                 case CardDataSource.Google:
-                    var sheetquery = new WorksheetQuery(DataLocation);
-                    var query = service.Query(sheetquery);
-                    ParseFromGoogle(query, DataLocation, service);
+                    SpreadsheetQuery query = new SpreadsheetQuery(DataLocation);
+                    SpreadsheetFeed feed = service.Query(query);
+                    ParseFromGoogle(((SpreadsheetEntry)feed.Entries[0]).Worksheets, DataLocation, service);
                     break;
             }
 
@@ -214,12 +214,20 @@ namespace FCGCardCreator
                 if (exportnameoverride == false) { exportname = value.ToLowerInvariant().Replace(" ", ""); notify("ExportName"); } // If we've never manually set the export name, update it to match our name.
             }
         }
+
+        // I'm starting to see why ViewModels exist...
         private string exportname;
         private bool exportnameoverride = false;
         public string ExportName { get { return exportname; } set { exportname = value; exportnameoverride = true; notify("ExportName"); } }
 
         private string exportattribute = "Name";
         public string ExportAttribute { get { return exportattribute; } set { exportattribute = value; notify("ExportAttribute"); } }
+
+        private uint printcount;
+        private uint PrintCount { get { return printcount; } set { printcount = value; notify("PrintCount"); } }
+
+        private string printcountattribute = "Count";
+        public string PrintCountAttribute { get { return printcountattribute; } set { printcountattribute = value; notify("PrintCountAttribute"); } }
         
         private string xamlfile;
         public string XamlTemplateFilename { get { return xamlfile; } set { xamlfile = value; CardUI = LoadXaml(); notify("XamlTemplateFilename"); } }

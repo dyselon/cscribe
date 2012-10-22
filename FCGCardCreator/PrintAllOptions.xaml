@@ -1,0 +1,99 @@
+﻿<Window x:Class="FCGCardCreator.PrintAllOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:self="clr-namespace:FCGCardCreator"
+        Title="PrintAllOptions" Height="469" Width="425">
+   <Grid>
+        <Grid.Resources>
+            <self:BoolToVis x:Key="visConverter"/>
+            <self:UIntToString x:Key="d2strConverter"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Global Options -->
+        <Grid Grid.Row="0" Margin="5,5" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Number to Print">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <RadioButton Grid.Row="0" Grid.Column="0" Name="FixedRadio" GroupName="NameType" IsChecked="True" Margin="5,8,15,0">Fixed Number</RadioButton>
+                    <RadioButton Grid.Row="1" Grid.Column="0" Name="AttributeRadio" GroupName="NameType" Margin="5,0,15,0">Card Attribute</RadioButton>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Gutter Size" Grid.Column="1" Margin="10,0,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Margin="0,4,0,0">The size between each card (inches):</Label>
+                    <TextBox Grid.Column="1" Name="GutterWidthTextbox" VerticalAlignment="Top" Margin="5,6,5,0">0.25</TextBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <!-- Category Options (Fixed) -->
+        <Grid Grid.Row="1" Visibility="{Binding ElementName=FixedRadio, Path=IsChecked, Converter={StaticResource visConverter}}" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Card Counts:</Label>
+            <ItemsControl Grid.Row="1" Margin="15,0" ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="{Binding CategoryName}"/>
+                            <TextBox Grid.Column="1" Text="{Binding PrintCount, Converter={StaticResource d2strConverter}}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <!-- Category Options (Dynamic) -->
+        <Grid Grid.Row="1" Visibility="{Binding ElementName=AttributeRadio, Path=IsChecked, Converter={StaticResource visConverter}}" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Card Counts:</Label>
+            <ItemsControl Grid.Row="1" Margin="15,0" ItemsSource="{Binding}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="{Binding CategoryName}"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding SharedAttributes}" SelectedIndex="0" SelectionChanged="PrintAttribute_Changed"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+        <!-- Main Buttons -->
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+            <Button Margin="10,2" Padding="10,4" Click="Cancel_Click">Cancel</Button>
+            <Button Margin="0,2,10,2" Padding="10,4" Click="PrintPreview_Click">Print Preview</Button>
+            <Button Margin="0,2" Padding="10,4" Click="Print_Click">Print</Button>
+        </StackPanel>
+
+    </Grid>
+</Window>

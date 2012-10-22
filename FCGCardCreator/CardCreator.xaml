@@ -62,7 +62,7 @@
             </MenuItem>
             <MenuItem Header="Print">
                 <MenuItem Header="Print Selected..."/>
-                <MenuItem Header="Print All..."/>
+                <MenuItem Header="Print All..." Click="PrintAll_Click"/>
             </MenuItem>
         </Menu>
         <TabControl Grid.Row="1" ItemsSource="{Binding}" Name="Tabs" SelectionChanged="Tabs_SelectionChanged">
