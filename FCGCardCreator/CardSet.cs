@@ -66,7 +66,7 @@ namespace FCGCardCreator
                     for (uint col = 0; col < worksheet.Cols; col++)
                     {
                         var colname = worksheet.GetString(0, col);
-                        colname.Replace(" ", "");
+                        colname = colname.Replace(" ", "");
                         var value = worksheet.GetString(row, col);
                         carddict.Add(colname, value);
                     }

@@ -14,10 +14,12 @@ Exports location browse should also have a default location (and save the last l
 OTHER USABILITY
 - Try to pull logic out from main window (sort of done)
 - Better UI for Google/net stuff, so there isn't long pauses with unresponsive UI - some sort of hourglass or whatever.
+- Google log in window should work if you press enter anywhere on it.
 - Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
 - Fix UI Stretching with long filenames in category config
 - .py - Switch Options from dict -> array of tuples
 - .py - Let python set display name, export name
+- .py - Option to skip rest of python errors. Also, more readable, if possible...
 
 BUGS AND PENDING GOTCHAS
 - Serializing options w/ line breaks...
