@@ -12,22 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-
 namespace FCGCardCreator
 {
     /// <summary>
-    /// Interaction logic for PrintAllOptions.xaml
+    /// Interaction logic for PrintSelectedOptions.xaml
     /// </summary>
-    public partial class PrintAllOptions : Window
+    public partial class PrintSelectedOptions : Window
     {
-        public PrintAllOptions()
+        public PrintSelectedOptions()
         {
             InitializeComponent();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void PrintPreview_Click(object sender, RoutedEventArgs e)
@@ -56,24 +55,20 @@ namespace FCGCardCreator
                 Gutter = gutter
             };
 
-            var set = (CardSet)DataContext;
-            foreach (var category in set)
-            {
-                category.AddPagesToDocument(doc, opts, category.Cards);
-            }
+            var category = (CardCategory)DataContext;
+            category.AddPagesToDocument(doc, opts, category.SelectedCards);
 
             var preview = new PrintPreview();
             preview.Document = doc;
             preview.ShowDialog();
-
         }
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+
         }
 
-        private void PrintAttribute_Changed(object sender, SelectionChangedEventArgs e)
+        private void Attribute_Changed(object sender, SelectionChangedEventArgs e)
         {
             var combobox = (ComboBox)sender;
             var category = combobox.DataContext as CardCategory;

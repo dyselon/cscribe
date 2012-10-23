@@ -105,6 +105,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CardCategory.cs" />
     <Compile Include="CardSet.cs" />
     <Compile Include="ExportAllOptions.xaml.cs">
       <DependentUpon>ExportAllOptions.xaml</DependentUpon>
@@ -118,6 +119,9 @@
     </Compile>
     <Compile Include="PrintPreview.xaml.cs">
       <DependentUpon>PrintPreview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrintSelectedOptions.xaml.cs">
+      <DependentUpon>PrintSelectedOptions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Worksheet.cs" />
     <Page Include="CardCreator.xaml">
@@ -153,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PrintPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintSelectedOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

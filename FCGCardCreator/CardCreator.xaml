@@ -61,7 +61,7 @@
                 <MenuItem Header="Export All..." Click="ExportAll_Click"/>
             </MenuItem>
             <MenuItem Header="Print">
-                <MenuItem Header="Print Selected..."/>
+                <MenuItem Header="Print Selected..." Click="PrintSelected_Click"/>
                 <MenuItem Header="Print All..." Click="PrintAll_Click"/>
             </MenuItem>
         </Menu>
