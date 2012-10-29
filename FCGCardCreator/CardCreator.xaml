@@ -74,7 +74,7 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <DockPanel DataContext="{Binding}">
-                        <Grid>
+                        <Grid Width="400">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -82,11 +82,11 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0">Layout File</Label>
                             <TextBox Grid.Row="1" x:Name="FileName" Grid.Column="0" Text="{Binding XamlTemplateFilename}" TextChanged="FileName_TextChanged"/>
@@ -98,7 +98,7 @@
                             <ItemsControl Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding Path=Options}">
 
                             </ItemsControl>
-                            <ListBox Grid.Row="6" Grid.ColumnSpan="2" x:Name="CardList" DockPanel.Dock="Left" Width="300" ItemsSource="{Binding Path=Cards}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended">
+                            <ListBox Grid.Row="6" Grid.ColumnSpan="2" x:Name="CardList" DockPanel.Dock="Left" ItemsSource="{Binding Path=Cards}" HorizontalContentAlignment="Stretch" Margin="0,24,0,-24" SelectionChanged="HeroBox_SelectionChanged" SelectionMode="Extended" VerticalAlignment="Top">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderBrush="Pink" BorderThickness="1" HorizontalAlignment="Stretch">

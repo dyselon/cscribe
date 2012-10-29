@@ -1,15 +1,9 @@
-FIX PRINTING
-- Remove requirement of "count" column. Add dialog that asks # per card OR reads from a field
-- Fix # of cards on page
-- try and remove extra print dialog
-- Print All
-
 CLEANUP EXPORTING
-Project-save export names, export attributes
-Fix export selected to use category as datacontext/bind stuff appropriately
-ExportAll example filename should show correctly on window open
-Exports should have a default location.
-Exports location browse should also have a default location (and save the last location if possible)
+- Project-save export names, export attributes
+- Fix export selected to use category as datacontext/bind stuff appropriately
+- ExportAll example filename should show correctly on window open
+- Exports should have a default location.
+- Exports location browse should also have a default location (and save the last location if possible)
 
 OTHER USABILITY
 - Try to pull logic out from main window (sort of done)
@@ -17,13 +11,18 @@ OTHER USABILITY
 - Google log in window should work if you press enter anywhere on it.
 - Fail gracefully if .xaml loading fails. Fail gracefully elsewhere, for that matter.
 - Fix UI Stretching with long filenames in category config
-- .py - Switch Options from dict -> array of tuples
-- .py - Let python set display name, export name
-- .py - Option to skip rest of python errors. Also, more readable, if possible...
+- Find out why card list stretches off bottom of dock
+- Make importing data/opening a project select the first tab if one isn't already selected.
+- Set an icon
+
+PYTHON
+- Switch Options from dict -> array of tuples
+- Let python set display name, export name
+- Option to skip rest of python errors. Also, more readable, if possible...
+- Get rid of "Script Options" header if there aren't any
 
 BUGS AND PENDING GOTCHAS
 - Serializing options w/ line breaks...
-- Fix UI Stretching with long filenames in category config
 
 REFACTOR
 Clean up Worksheet/GoogleWorksheetReader/CardSet entanglement - Either CardSet and Worksheet know about google/excel, or they don't. Also, why does Worksheet exist, when Excel doesn't use it? Should it?

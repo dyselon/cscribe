@@ -50,7 +50,7 @@ namespace FCGCardCreator
         private bool fixedprint = true;
         public bool FixedPrint { get { return fixedprint; } set { fixedprint = value; notify("FixedPrint"); } }
 
-        private uint printcount;
+        private uint printcount = 1;
         public uint PrintCount { get { return printcount; } set { printcount = value; notify("PrintCount"); } }
 
         private string printcountattribute = "Count";
