@@ -57,8 +57,10 @@ The images produced are always in .png format. More formats may be added in the 
 
 PRINTING
 --------
-*Disabled currently*
-Printing cards directly works, but is a little unintuitive. Select the cards you want to print, just like exporting images. Then hit "Print Selected..." This will open the print dialog, but this one won't actually print anything. It's just used to get paper size. Configure your printing options the way you want, then press Print. A Print Preview window will appear; from here, you can hit Print, and it will actually work.
+Similar to exporting images, you can print only selected cards, or every card in your set.
 
-Right now, the program will always try and put 8 cards on a portrait page, and 9 on a landscape. This is dumb, but, it's the way it works right now. My apologies.
+Also similar to images, you can either print a fixed number of each card, or print a number of copies based on an attribute on the card.
 
+SAVING PROJECTS
+---------------
+To save you from having to import data and set up each tab every time you open the program, you can save and load project files. The actual card data is *not* saved with a project, only that data's source. This means any changes to your cards will be reflected if you reopen a project.
