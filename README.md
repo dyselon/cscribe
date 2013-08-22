@@ -2,13 +2,11 @@ CSCRIBE
 =======
 **Templating software** - v0.2
 
-**NOTE - As of right now, printing is temporarily disabled.**
-
-I'll fix it as soon as possible. WIP software, y'all.
-
 WHAT IS IT?
 -----------
 CScribe is software that transforms spreadsheets of data into images or printable files. Its intended use is to create images for playtesting and producing card games, though it could probably be used for other templating purposes as well.
+
+If you want to see CScribe in action, I made a video showing CScribe's basic features, which can be viewed here: http://www.youtube.com/watch?v=e4trs7BrW-Y
 
 HOW DOES IT WORK?
 -----------------
